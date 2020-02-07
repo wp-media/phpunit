@@ -3,7 +3,7 @@
 namespace WPMedia\PHPUnit;
 
 use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamContent;
+use org\bovigo\vfs\vfsStreamFile;
 use org\bovigo\vfs\vfsStreamDirectory;
 
 /**
@@ -48,10 +48,14 @@ class VirtualFilesystemDirect {
 	 *
 	 * @param string $filename Absolute path to file.
 	 *
-	 * @return vfsStreamContent instance of the file.
+	 * @return vfsStreamFile|null instance of the file if exists; else null.
 	 */
 	public function getFile( $filename ) {
-		// TODO
+		if ( ! $this->startsWithRoot( $filename ) ) {
+			$filename = $this->root . ltrim( $filename, DIRECTORY_SEPARATOR );
+		}
+
+		return $this->filesystem->getChild( $filename );
 	}
 
 	/**
@@ -59,13 +63,25 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string     $filename Absolute path to file.
-	 * @param string|int $filectime
+	 * @param string|vfsStreamFile $file  Absolute path to file when string or instance of vfsStreamFile.
+	 * @param string|int           $filectime Last modification time to set for the file.
 	 *
-	 * @return int file's filectime.
+	 * @return int file's filectime when file exists; else null.
 	 */
-	public function setFilemtime( $filename, $filectime ) {
-		// TODO
+	public function setFilemtime( $file, $filemtime ) {
+		if ( ! is_a ( $file, 'org\bovigo\vfs\vfsStreamFile' ) ) {
+			$file = $this->getFile( $file );
+			if ( is_null( $file ) ) {
+				return null;
+			}
+		}
+
+		if ( is_string( $filemtime ) ) {
+			$filemtime = strtotime( $filemtime );
+		}
+		$file->lastModified( $filemtime );
+
+		return $file->filemtime();
 	}
 
 	/**
@@ -239,5 +255,18 @@ class VirtualFilesystemDirect {
 	 */
 	public function touch( $file, $time = 0, $atime = 0 ) {
 		// TODO
+	}
+
+	/**
+	 * Checks if the given filename starts with the root directory.
+	 *
+	 * @since 1.1
+	 *
+	 * @param $filename
+	 *
+	 * @return bool true when starts with root directory; else false.
+	 */
+	protected function startsWithRoot( $filename ) {
+		return ( substr( $filename, 0, strlen( $this->root ) ) === $this->root );
 	}
 }
