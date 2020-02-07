@@ -51,9 +51,7 @@ class VirtualFilesystemDirect {
 	 * @return vfsStreamFile|null instance of the file if exists; else null.
 	 */
 	public function getFile( $filename ) {
-		if ( ! $this->startsWithRoot( $filename ) ) {
-			$filename = $this->root . ltrim( $filename, DIRECTORY_SEPARATOR );
-		}
+		$filename = $this->prefixRoot( $filename );
 
 		return $this->filesystem->getChild( $filename );
 	}
@@ -149,12 +147,16 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $file Path to file or directory.
+	 * @param string $fileOrDir Path to file or directory.
 	 *
-	 * @return bool Whether $file exists or not.
+	 * @return bool Whether $fileOrDir exists or not.
 	 */
-	public function exists( $file ) {
-		// TODO
+	public function exists( $fileOrDir ) {
+		return (
+			$this->is_dir( $fileOrDir )
+			||
+			$this->is_file( $fileOrDir )
+		);
 	}
 
 	/**
@@ -167,7 +169,7 @@ class VirtualFilesystemDirect {
 	 * @return bool Whether $path is a directory.
 	 */
 	public function is_dir( $path ) {
-		// TODO
+		return is_dir( $this->getUrl( $path ) );
 	}
 
 	/**
@@ -180,7 +182,7 @@ class VirtualFilesystemDirect {
 	 * @return bool Whether $file is a file.
 	 */
 	public function is_file( $file ) {
-		// TODO
+		return is_file( $this->getUrl( $file ) );
 	}
 
 	/**
@@ -278,5 +280,35 @@ class VirtualFilesystemDirect {
 	 */
 	protected function startsWithRoot( $filename ) {
 		return ( substr( $filename, 0, strlen( $this->root ) ) === $this->root );
+	}
+
+	/**
+	 * Adds the root if missing.
+	 *
+	 * @since 1.1
+	 *
+	 * @param string $fileOrDir Path to file or directory.
+	 *
+	 * @return string file or directory path with root.
+	 */
+	protected function prefixRoot( $fileOrDir ) {
+		if ( $this->startsWithRoot( $fileOrDir ) ) {
+			return $fileOrDir;
+		}
+
+		return $this->root . ltrim( $fileOrDir, '\//' );
+	}
+
+	/**
+	 * Gets the absolute vfsStream::url for the given file or directory.
+	 *
+	 * @since 1.1
+	 *
+	 * @param string $fileOrDir Path to the file or directory.
+	 *
+	 * @return string absolute url.
+	 */
+	protected function getUrl( $fileOrDir ) {
+		return vfsStream::url( $this->prefixRoot( $fileOrDir ) );
 	}
 }
