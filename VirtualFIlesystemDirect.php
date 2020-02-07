@@ -208,12 +208,12 @@ class VirtualFilesystemDirect {
 	 *
 	 * @param string $file Path to file or directory.
 	 *
-	 * @return bool Whether $file is writable.
+	 * @return bool true if $file is writable; else, false.
 	 */
 	public function is_writable( $file ) {
 		$file = $this->getFile( $file );
 		if ( is_null( $file ) ) {
-			return null;
+			return false;
 		}
 
 		return $file->isWritable( $file->getUser(), $file->getGroup() );
