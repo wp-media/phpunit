@@ -195,12 +195,7 @@ class VirtualFilesystemDirect {
 	 * @return bool Whether $file is readable.
 	 */
 	public function is_readable( $file ) {
-		$file = $this->getFile( $file );
-		if ( is_null( $file ) ) {
-			return false;
-		}
-
-		return $file->isReadable( $file->getUser(), $file->getGroup() );
+		return is_writeable( $this->getUrl( $file ) );
 	}
 
 	/**
@@ -208,17 +203,12 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $file Path to file or directory.
+	 * @param string $fileOrDir Path to file or directory.
 	 *
 	 * @return bool true if $file is writable; else, false.
 	 */
-	public function is_writable( $file ) {
-		$file = $this->getFile( $file );
-		if ( is_null( $file ) ) {
-			return false;
-		}
-
-		return $file->isWritable( $file->getUser(), $file->getGroup() );
+	public function is_writable( $fileOrDir ) {
+		return is_writeable( $this->getUrl( $fileOrDir ) );
 	}
 
 	/**
