@@ -63,13 +63,13 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string|vfsStreamFile $file  Absolute path to file when string or instance of vfsStreamFile.
+	 * @param string|vfsStreamFile $file      Absolute path to file when string or instance of vfsStreamFile.
 	 * @param string|int           $filectime Last modification time to set for the file.
 	 *
 	 * @return int file's filectime when file exists; else null.
 	 */
 	public function setFilemtime( $file, $filemtime ) {
-		if ( ! is_a ( $file, 'org\bovigo\vfs\vfsStreamFile' ) ) {
+		if ( ! is_a( $file, 'org\bovigo\vfs\vfsStreamFile' ) ) {
 			$file = $this->getFile( $file );
 			if ( is_null( $file ) ) {
 				return null;
@@ -193,7 +193,12 @@ class VirtualFilesystemDirect {
 	 * @return bool Whether $file is readable.
 	 */
 	public function is_readable( $file ) {
-		// TODO
+		$file = $this->getFile( $file );
+		if ( is_null( $file ) ) {
+			return false;
+		}
+
+		return $file->isReadable( $file->getUser(), $file->getGroup() );
 	}
 
 	/**
@@ -206,7 +211,12 @@ class VirtualFilesystemDirect {
 	 * @return bool Whether $file is writable.
 	 */
 	public function is_writable( $file ) {
-		// TODO
+		$file = $this->getFile( $file );
+		if ( is_null( $file ) ) {
+			return null;
+		}
+
+		return $file->isWritable( $file->getUser(), $file->getGroup() );
 	}
 
 	/**

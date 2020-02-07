@@ -11,22 +11,23 @@ abstract class TestCase extends BaseTestCase {
 		'Tests' => [
 			'Integration'  => [],
 			'Unit'         => [
-				'bootstrap.php' => '',
+				'bootstrap.php' => 'Donec turpis ante, aliquam vitae egestas ac, rhoncus ut quam.',
 				'SomeClass'     => [
 					'getFile.php' => '',
 				],
 			],
 			'includes'     => [],
-			'TestCase.php' => 'some value',
+			'TestCase.php' => 'Maecenas eget erat ligula.',
 		],
 		'baz'   => [
-			'index.html' => '',
+			'index.html' => 'Lorem ipsum dolor sit amet.',
 		],
 	];
+	protected $permissions = 0777;
 
 	protected function setUp() {
 		parent::setUp();
 
-		$this->filesystem = new VirtualFilesystemDirect( 'cache', $this->structure );
+		$this->filesystem = new VirtualFilesystemDirect( 'cache', $this->structure, $this->permissions );
 	}
 }
