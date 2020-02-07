@@ -4,3 +4,8 @@
 .github export-ignore
 composer.lock
 LICENSE.md export-ignore
+README.md export-ignore
+
+# folders.
+Tests export-ignore
+vendor export-ignore

@@ -57,8 +57,8 @@ function bootstrap_integration_suite( $wp_tests_dir ) {
 	);
 
 	// Bootstrap the plugin.
-	if ( is_readable( WPMEDIA_PHPUNIT_ROOT_TEST_DIR . 'bootstrap.php' ) ) {
-		require_once WPMEDIA_PHPUNIT_ROOT_TEST_DIR . 'bootstrap.php';
+	if ( is_readable( WPMEDIA_PHPUNIT_ROOT_TEST_DIR . '/bootstrap.php' ) ) {
+		require_once WPMEDIA_PHPUNIT_ROOT_TEST_DIR . '/bootstrap.php';
 	}
 
 	// Start up the WP testing environment.

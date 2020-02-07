@@ -1,6 +1,6 @@
 {
 	"name": "wp-media/phpunit",
-	"description": "PHPUnit extender for our common test suite bootstrapping.",
+	"description": "PHPUnit extender for bootstrapping unit and WordPress integration test suites.",
 	"homepage": "https://github.com/wp-media/phpunit",
 	"license": "GPL-2.0+",
 	"authors": [
@@ -26,5 +26,13 @@
 	},
 	"autoload-dev": {
 		"psr-4": { "WPMedia\\PHPUnit\\": ""	}
+	},
+	"scripts": {
+		"test-unit": "./wpmedia-phpunit unit path=Tests/Unit WPMEDIA_PHPUNIT_ROOT_DIR=.",
+		"test-integration": "./wpmedia-phpunit integration path=Tests/Integration/ WPMEDIA_PHPUNIT_ROOT_DIR=.",
+		"run-tests": [
+			"@test-unit",
+			"@test-integration"
+		]
 	}
 }
