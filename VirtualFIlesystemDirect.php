@@ -3,6 +3,7 @@
 namespace WPMedia\PHPUnit;
 
 use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamAbstractContent;
 use org\bovigo\vfs\vfsStreamFile;
 use org\bovigo\vfs\vfsStreamDirectory;
 
@@ -12,6 +13,7 @@ use org\bovigo\vfs\vfsStreamDirectory;
  * @since 1.1
  */
 class VirtualFilesystemDirect {
+	use TestCaseTrait;
 
 	/**
 	 * Root filesystem directory.
@@ -37,8 +39,8 @@ class VirtualFilesystemDirect {
 	 * @param int    $permissions Optional. File permissions for the root directory.
 	 */
 	public function __construct( $rootDirname = 'cache', array $structure = [], $permissions = 0755 ) {
-		$this->root       = trailingslashit( $rootDirname );
-		$this->filesystem = vfsStream::setup( $rootDirname, $permissions, $structure );
+		$this->root       = rtrim( $rootDirname, '/\\' );
+		$this->filesystem = vfsStream::setup( $this->root, $permissions, $structure );
 	}
 
 	/**
@@ -67,6 +69,10 @@ class VirtualFilesystemDirect {
 	 */
 	public function getDir( $dirname ) {
 		$dirname = rtrim( $this->prefixRoot( $dirname ), '/\\' );
+
+		if ( $dirname === $this->root ) {
+			return $this->filesystem;
+		}
 
 		return $this->filesystem->getChild( $dirname );
 	}
@@ -174,14 +180,24 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string       $file      Path to the file or directory.
+	 * @param string       $fileOrDir Path to the file or directory.
 	 * @param bool         $recursive Optional. If set to true, changes file group recursively. Default false.
 	 * @param string|false $type      Optional. Type of resource. 'f' for file, 'd' for directory. Default false.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
-	public function delete( $file, $recursive = false, $type = false ) {
-		// TODO
+	public function delete( $fileOrDir, $recursive = false, $type = false ) {
+		$fileOrDir = $this->prefixRoot( $fileOrDir );
+
+		if ( $recursive || 'd' === $type || $this->is_dir( $fileOrDir ) ) {
+			return $this->rmdir( $fileOrDir, $recursive );
+		}
+
+		if ( ! $this->is_file( $fileOrDir ) ) {
+			return false;
+		}
+
+		return @unlink( $this->getUrl( $fileOrDir ) );
 	}
 
 	/**
@@ -194,6 +210,10 @@ class VirtualFilesystemDirect {
 	 * @return bool Whether $fileOrDir exists or not.
 	 */
 	public function exists( $fileOrDir ) {
+		if ( ! $this->hasFilesystem() ) {
+			return false;
+		}
+
 		return (
 			$this->is_dir( $fileOrDir )
 			||
@@ -206,12 +226,16 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $path Directory path.
+	 * @param string $dir Directory path.
 	 *
-	 * @return bool Whether $path is a directory.
+	 * @return bool Whether $dir is a directory.
 	 */
-	public function is_dir( $path ) {
-		return is_dir( $this->getUrl( $path ) );
+	public function is_dir( $dir ) {
+		if ( ! $this->hasFilesystem() ) {
+			return false;
+		}
+
+		return ( $this->getDir( $dir ) instanceof vfsStreamDirectory );
 	}
 
 	/**
@@ -272,14 +296,37 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $path      Path to directory.
-	 * @param bool   $recursive Optional. Whether to recursively remove files/directories.
-	 *                          Default false.
+	 * @param string $dir       Path to directory.
+	 * @param bool   $recursive Optional. Whether to recursively remove files/directories. Default false.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
-	public function rmdir( $path, $recursive = false ) {
-		// TODO
+	public function rmdir( $dir, $recursive = false ) {
+		$dir = $this->prefixRoot( $dir );
+
+		if ( ! $this->is_dir( $dir ) ) {
+			return false;
+		}
+
+		if ( ! $recursive ) {
+			return @rmdir( $this->getUrl( $dir ) );
+		}
+
+		// At this point it's a folder, and we're in recursive mode.
+
+		// When removing the root, the filesystem is deleted.
+		if ( $dir === $this->root ) {
+			$this->root       = null;
+			$this->filesystem = null;
+
+			return true;
+		}
+
+		$child   = $this->getDir( $dir );
+		$dirname = $this->getNonPublicPropertyValue( 'name', vfsStreamAbstractContent::class, $child );
+		$parent  = $this->getParentDir( $dirname, $child );
+
+		return $parent->removeChild( $dirname );
 	}
 
 	/**
@@ -302,16 +349,59 @@ class VirtualFilesystemDirect {
 	}
 
 	/**
-	 * Checks if the given filename starts with the root directory.
+	 * Gets the parent directory, if it exists.
 	 *
 	 * @since 1.1
 	 *
-	 * @param $filename
+	 * @param string             $dirname Child directory name.
+	 * @param vfsStreamDirectory $child   Instance of the child directory.
 	 *
-	 * @return bool true when starts with root directory; else false.
+	 * @return vfsStreamDirectory|null parent directory on success; null when no parent directory.
 	 */
-	protected function startsWithRoot( $filename ) {
-		return ( substr( $filename, 0, strlen( $this->root ) ) === $this->root );
+	protected function getParentDir( $dirname, $child ) {
+		$parentPath = $this->getNonPublicPropertyValue( 'parentPath', vfsStreamAbstractContent::class, $child );
+
+		// Directory is root. There's no parent. Bail out.
+		if ( is_null( $parentPath ) && $dirname === $this->root ) {
+			return null;
+		}
+
+		// There's no parent. Bail out.
+		if ( is_null( $parentPath ) ) {
+			return null;
+		}
+
+		return $this->getDir( $parentPath );
+	}
+
+	/**
+	 * Gets the absolute vfsStream::url for the given file or directory.
+	 *
+	 * @since 1.1
+	 *
+	 * @param string $fileOrDir Path to the file or directory.
+	 *
+	 * @return string absolute url.
+	 */
+	protected function getUrl( $fileOrDir ) {
+		return vfsStream::url( $this->prefixRoot( $fileOrDir ) );
+	}
+
+	/**
+	 * Checks if the filesystem exists.
+	 *
+	 * @since 1.1
+	 *
+	 * @return bool
+	 */
+	protected function hasFilesystem() {
+		return (
+			$this->filesystem instanceof vfsStreamDirectory
+			&&
+			is_string( $this->root )
+			&&
+			'' !== $this->root
+		);
 	}
 
 	/**
@@ -328,19 +418,19 @@ class VirtualFilesystemDirect {
 			return $fileOrDir;
 		}
 
-		return $this->root . ltrim( $fileOrDir, '\//' );
+		return $this->root . DIRECTORY_SEPARATOR . ltrim( $fileOrDir, '\//' );
 	}
 
 	/**
-	 * Gets the absolute vfsStream::url for the given file or directory.
+	 * Checks if the given filename starts with the root directory.
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $fileOrDir Path to the file or directory.
+	 * @param $filename
 	 *
-	 * @return string absolute url.
+	 * @return bool true when starts with root directory; else false.
 	 */
-	protected function getUrl( $fileOrDir ) {
-		return vfsStream::url( $this->prefixRoot( $fileOrDir ) );
+	protected function startsWithRoot( $filename ) {
+		return ( substr( $filename, 0, strlen( $this->root ) ) === $this->root );
 	}
 }

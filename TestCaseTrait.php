@@ -64,4 +64,13 @@ trait TestCaseTrait {
 
 		return $property;
 	}
+
+	protected function getNonPublicPropertyValue( $property, $class, $instance = null ) {
+		$property = $this->get_reflective_property( $property, $class );
+
+		if ( is_null( $instance ) ) {
+			return $property->getValue();
+		}
+		return $property->getValue( $instance );
+	}
 }
