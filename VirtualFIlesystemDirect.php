@@ -107,7 +107,10 @@ class VirtualFilesystemDirect {
 	 * @return string|false file contents string on success; false on failure.
 	 */
 	public function get_contents( $filename ) {
-		// TODO
+		if ( ! $this->exists( $filename ) ) {
+			return false;
+		}
+		return @file_get_contents( $this->getUrl( $filename ) );
 	}
 
 	/**
@@ -130,7 +133,7 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string    $fileOrDir      Path to the file or directory.
+	 * @param string    $fileOrDir Path to the file or directory.
 	 * @param int|false $mode      Optional. The permissions as octal number, usually 0644 for files,
 	 *                             0755 for directories. Default false.
 	 * @param bool      $recursive Optional. If set to true, changes file group recursively. Default false.
