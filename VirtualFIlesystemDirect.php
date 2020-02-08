@@ -363,7 +363,13 @@ class VirtualFilesystemDirect {
 	 * @return bool True on success, false on failure.
 	 */
 	public function touch( $file, $time = 0, $atime = 0 ) {
-		// TODO
+		if ( $time == 0 ) {
+			$time = time();
+		}
+		if ( $atime == 0 ) {
+			$atime = time();
+		}
+		return touch( $this->getUrl( $file ), $time, $atime );
 	}
 
 	/**
