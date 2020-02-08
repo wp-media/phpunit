@@ -110,6 +110,7 @@ class VirtualFilesystemDirect {
 		if ( ! $this->exists( $filename ) ) {
 			return false;
 		}
+
 		return @file_get_contents( $this->getUrl( $filename ) );
 	}
 
@@ -124,8 +125,18 @@ class VirtualFilesystemDirect {
 	 *
 	 * @return bool True on success, false on failure.
 	 */
-	public function put_contents( $file, $contents, $mode = false ) {
-		// TODO
+	public function put_contents( $filename, $contents, $mode = false ) {
+		$file = $this->getFile( $filename );
+		if ( is_null( $file ) ) {
+			return false;
+		}
+
+		$file->setContent( $contents );
+
+		// chmod is the last step in WP_Filesystem_Direct::put_contents().
+		$this->chmod( $filename, $mode );
+
+		return true;
 	}
 
 	/**
