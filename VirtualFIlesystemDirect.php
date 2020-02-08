@@ -30,6 +30,13 @@ class VirtualFilesystemDirect {
 	protected $filesystem;
 
 	/**
+	 * File permissions for the root directory.
+	 *
+	 * @var int
+	 */
+	protected $permissions;
+
+	/**
 	 * Create an instance of the virtual filesystem.
 	 *
 	 * @since 1.1
@@ -39,8 +46,9 @@ class VirtualFilesystemDirect {
 	 * @param int    $permissions Optional. File permissions for the root directory.
 	 */
 	public function __construct( $rootDirname = 'cache', array $structure = [], $permissions = 0755 ) {
-		$this->root       = rtrim( $rootDirname, '/\\' );
-		$this->filesystem = vfsStream::setup( $this->root, $permissions, $structure );
+		$this->root        = rtrim( $rootDirname, '/\\' );
+		$this->permissions = $permissions;
+		$this->filesystem  = vfsStream::setup( $this->root, $permissions, $structure );
 	}
 
 	/**
@@ -292,7 +300,13 @@ class VirtualFilesystemDirect {
 	 * @return bool True on success, false on failure.
 	 */
 	public function mkdir( $path, $chmod = false ) {
-		// TODO
+		if ( ! @mkdir( $this->getUrl( $path ) ) ) {
+			return false;
+		}
+
+		$this->chmod( $path, $chmod ?: $this->permissions );
+
+		return true;
 	}
 
 	/**
