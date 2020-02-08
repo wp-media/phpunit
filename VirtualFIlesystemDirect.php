@@ -248,7 +248,11 @@ class VirtualFilesystemDirect {
 	 * @return bool Whether $file is a file.
 	 */
 	public function is_file( $file ) {
-		return is_file( $this->getUrl( $file ) );
+		if ( ! $this->hasFilesystem() ) {
+			return false;
+		}
+
+		return ( $this->getFile( $file ) instanceof vfsStreamFile );
 	}
 
 	/**
