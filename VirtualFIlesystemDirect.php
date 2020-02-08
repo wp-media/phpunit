@@ -57,6 +57,21 @@ class VirtualFilesystemDirect {
 	}
 
 	/**
+	 * Gets the directory instance, if it exists.
+	 *
+	 * @since 1.1
+	 *
+	 * @param string $dirname Path to the directory.
+	 *
+	 * @return vfsStreamDirectory|null
+	 */
+	public function getDir( $dirname ) {
+		$dirname = rtrim( $this->prefixRoot( $dirname ), '/\\' );
+
+		return $this->filesystem->getChild( $dirname );
+	}
+
+	/**
 	 * Sets the last modified attribute for the given file.
 	 *
 	 * @since 1.1
@@ -115,16 +130,29 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string    $file      Path to the file.
+	 * @param string    $fileOrDir      Path to the file or directory.
 	 * @param int|false $mode      Optional. The permissions as octal number, usually 0644 for files,
 	 *                             0755 for directories. Default false.
-	 * @param bool      $recursive Optional. If set to true, changes file group recursively.
-	 *                             Default false.
+	 * @param bool      $recursive Optional. If set to true, changes file group recursively. Default false.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
-	public function chmod( $file, $mode = false, $recursive = false ) {
-		// TODO
+	public function chmod( $fileOrDir, $mode = false, $recursive = false ) {
+		if ( ! $this->exists( $fileOrDir ) ) {
+			return false;
+		}
+
+		if ( false === $mode ) {
+			if ( $this->is_file( $fileOrDir ) ) {
+				$mode = 0644;
+			} elseif ( $this->is_dir( $fileOrDir ) ) {
+				$mode = 0755;
+			} else {
+				return false;
+			}
+		}
+
+		return chmod( $this->getUrl( $fileOrDir ), $mode );
 	}
 
 	/**
