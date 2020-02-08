@@ -2,11 +2,10 @@
 
 namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
 
-use WPMedia\PHPUnit\VirtualFilesystemDirect;
-use WPMedia\PHPUnit\Unit\TestCase as BaseTestCase;
+use WPMedia\PHPUnit\Unit\VirtualFilesystemTestCase;
 
-abstract class TestCase extends BaseTestCase {
-	protected $filesystem;
+abstract class TestCase extends VirtualFilesystemTestCase {
+
 	protected $structure = [
 		'Tests' => [
 			'Integration'  => [],
@@ -23,11 +22,4 @@ abstract class TestCase extends BaseTestCase {
 			'index.html' => 'Lorem ipsum dolor sit amet.',
 		],
 	];
-	protected $permissions = 0777;
-
-	protected function setUp() {
-		parent::setUp();
-
-		$this->filesystem = new VirtualFilesystemDirect( 'cache', $this->structure, $this->permissions );
-	}
 }
