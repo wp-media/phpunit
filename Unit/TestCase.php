@@ -12,10 +12,29 @@ abstract class TestCase extends PHPUnitTestCase {
 	use MockeryPHPUnitIntegration;
 	use TestCaseTrait;
 
+	/**
+	 * Set to true in root TestCase to stub polyfills in setUpBeforeClass().
+	 *
+	 * @var bool
+	 */
+	protected static $stubPolyfills = false;
+
+	/**
+	 * Set to true in root TestCase to mock the common WP Functions in the setUp().
+	 *
+	 * @var bool
+	 */
+	protected static $mockCommonWpFunctionsInSetUp = false;
+
+	/**
+	 * Prepares the test environment before test class runs.
+	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
 
-		self::stubPolyfills();
+		if ( self::$stubPolyfills ) {
+			self::stubPolyfills();
+		}
 	}
 
 	/**
@@ -25,7 +44,9 @@ abstract class TestCase extends PHPUnitTestCase {
 		parent::setUp();
 		Monkey\setUp();
 
-		$this->mockCommonWpFunctions();
+		if ( self::$mockCommonWpFunctionsInSetUp ) {
+			$this->mockCommonWpFunctions();
+		}
 	}
 
 	/**

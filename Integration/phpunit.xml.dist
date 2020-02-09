@@ -16,6 +16,7 @@
 	<testsuites>
 		<testsuite name="integration">
 			<directory suffix=".php">../../../../Tests/Integration/</directory>
+			<exclude>../../../../Tests/Integration/bootstrap.php</exclude>
 		</testsuite>
 	</testsuites>
 </phpunit>

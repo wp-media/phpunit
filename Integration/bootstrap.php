@@ -57,14 +57,12 @@ function bootstrap_integration_suite( $wp_tests_dir ) {
 	);
 
 	// Bootstrap the plugin.
-	if ( is_readable( WPMEDIA_PHPUNIT_ROOT_TEST_DIR . 'bootstrap.php' ) ) {
-		require_once WPMEDIA_PHPUNIT_ROOT_TEST_DIR . 'bootstrap.php';
+	if ( is_readable( WPMEDIA_PHPUNIT_ROOT_TEST_DIR . '/bootstrap.php' ) ) {
+		require_once WPMEDIA_PHPUNIT_ROOT_TEST_DIR . '/bootstrap.php';
 	}
 
 	// Start up the WP testing environment.
 	require_once $wp_tests_dir . '/includes/bootstrap.php';
-
-	require_once 'TestCase.php';
 }
 
 bootstrap_integration_suite( get_wp_tests_dir() );

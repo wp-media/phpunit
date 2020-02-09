@@ -3,79 +3,9 @@
 
 namespace WPMedia\PHPUnit;
 
-function config_argv( $test ) {
-	$script = [];
-
-	if ( 'unit' === $test ) {
-		$script = [
-			'vendor/bin/phpunit',
-			'--testsuite',
-			'unit',
-			'--colors=always',
-			'--configuration',
-			__DIR__ . '/Unit/phpunit.xml.dist',
-		];
-	} elseif ( 'integration' === $test ) {
-		$script = [
-			'vendor/bin/phpunit',
-			'--testsuite',
-			'integration',
-			'--colors=always',
-			'--configuration',
-			__DIR__ . '/Integration/phpunit.xml.dist',
-		];
-	}
-
-	strip_out_path();
-
-	if ( 2 === $_SERVER['argc'] ) {
-		return $script;
-	}
-
-	// Add in additional command line arguments.
-	foreach ( array_slice( $_SERVER['argv'], 2 ) as $arg ) {
-		$script[] = $arg;
-	}
-
-	return $script;
+$_SERVER['argv'][1] = strtolower( $_SERVER['argv'][1] );
+if ( ! class_exists( __NAMESPACE__ . '\BootstrapManager' ) ) {
+	require 'BootstrapManager.php';
 }
-
-function strip_out_path() {
-	$path = get_path_arg();
-	if ( ! $path ) {
-		return;
-	}
-
-	unset( $_SERVER['argv'][ $path['index'] ] );
-}
-
-function get_path_arg() {
-	foreach ( $_SERVER['argv'] as $index => $arg ) {
-		if ( 'path' === substr( $arg, 0, 4 ) ) {
-			return [ 'index' => $index, 'path' => str_replace( 'path=', '', $arg ) ];
-		}
-	}
-}
-
-function run_testsuite( $which_testsuite ) {
-	$_SERVER['argv'] = $GLOBALS['argv'] = config_argv( $which_testsuite );
-	$_SERVER['argc'] = $GLOBALS['argc'] = count( $GLOBALS['argv'] );
-
-	// Load PHPUnit.
-	include dirname( dirname( __DIR__ ) ) . '/bin/phpunit';
-}
-
-function setup_constants( $which_testsuite ) {
-	$path = get_path_arg();
-	if ( $path ) {
-		$path = $path['path'];
-	} else {
-		$path = 'Tests/' . ucfirst( $which_testsuite );
-	}
-
-	define( 'WPMEDIA_PHPUNIT_ROOT_DIR', dirname( dirname( dirname( __DIR__ ) ) ) . DIRECTORY_SEPARATOR );
-	define( 'WPMEDIA_PHPUNIT_ROOT_TEST_DIR', WPMEDIA_PHPUNIT_ROOT_DIR . $path );
-}
-
-setup_constants( $_SERVER['argv'][1] );
-run_testsuite( $_SERVER['argv'][1] );
+BootstrapManager::setupConstants( $_SERVER['argv'][1] );
+BootstrapManager::runTestSuite( $_SERVER['argv'][1] );
