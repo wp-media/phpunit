@@ -22,7 +22,7 @@ In your repo's `composer.json` file, add the following `"require-dev"` dependenc
 Sometimes you need a custom bootstrapping solution in your repo, such as loading a factory, handling licensing, etc. Here are the steps to get you rolling:
 
 1. Add a `bootstrap.php` file in `Unit` or `Integration` directory.
-2. Add the following code to it:
+2. In your `Tests/Integration/bootstrap.php` file, add the following code to it:
 
 ```php
 tests_add_filter(

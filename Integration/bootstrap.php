@@ -63,8 +63,6 @@ function bootstrap_integration_suite( $wp_tests_dir ) {
 
 	// Start up the WP testing environment.
 	require_once $wp_tests_dir . '/includes/bootstrap.php';
-
-	require_once 'TestCase.php';
 }
 
 bootstrap_integration_suite( get_wp_tests_dir() );

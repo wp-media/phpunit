@@ -18,7 +18,8 @@ class BootstrapManager {
 		// Find and load PHPUnit.
 		foreach ( [ dirname( dirname( __DIR__ ) ), __DIR__ . '/vendor' ] as $root ) {
 			if ( is_readable( "{$root}/bin/phpunit" ) ) {
-				include "{$root}/bin/phpunit";
+				require_once "{$root}/bin/phpunit";
+				return;
 			}
 		}
 	}

@@ -6,9 +6,6 @@ use function WPMedia\PHPUnit\init_test_suite;
 
 require_once dirname( dirname( __FILE__ ) ) . '/bootstrap-functions.php';
 init_test_suite( 'Unit' );
-require_once dirname( dirname( __FILE__ ) ) . '/Fixtures/polyfills.php';
-
-require_once 'TestCase.php';
 
 if ( ! defined( 'MINUTE_IN_SECONDS' ) ) {
 	define( 'MINUTE_IN_SECONDS', 60 );
