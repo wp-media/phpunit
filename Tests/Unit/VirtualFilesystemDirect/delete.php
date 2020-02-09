@@ -9,48 +9,61 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
 class Test_Delete extends TestCase {
 
 	function testShouldDeleteFileWhenExists() {
-		$this->assertTrue( $this->filesystem->exists( 'baz/index.html' ) );
-		$this->assertTrue( $this->filesystem->delete( 'baz/index.html' ) );
-		$this->assertFalse( $this->filesystem->exists( 'baz/index.html' ) );
+		$file = 'baz/index.html';
+		$this->assertTrue( $this->filesystem->exists( $file ) );
+		$this->assertTrue( $this->filesystem->delete( $file ) );
+		$this->assertFalse( $this->filesystem->exists( $file ) );
 
-		$this->assertTrue( $this->filesystem->exists( 'Tests/Unit/bootstrap.php' ) );
-		$this->assertTrue( $this->filesystem->delete( 'Tests/Unit/bootstrap.php', false, 'f' ) );
-		$this->assertFalse( $this->filesystem->exists( 'Tests/Unit/bootstrap.php' ) );
+		// Check with the Url version.
+		$file = $this->filesystem->getUrl( 'Tests/Unit/bootstrap.php' );
+		$this->assertTrue( $this->filesystem->exists( $file ) );
+		$this->assertTrue( $this->filesystem->delete( $file, false, 'f' ) );
+		$this->assertFalse( $this->filesystem->exists( $file ) );
 	}
 
 	function testShouldDeleteDirWhenExistsAndEmpty() {
-		$this->assertTrue( $this->filesystem->exists( 'Tests/includes/' ) );
-		$this->assertTrue( $this->filesystem->delete( 'Tests/includes/' ) );
-		$this->assertFalse( $this->filesystem->exists( 'Tests/includes/' ) );
+		$file = 'Tests/includes/';
+		$this->assertTrue( $this->filesystem->exists( $file ) );
+		$this->assertTrue( $this->filesystem->delete( $file ) );
+		$this->assertFalse( $this->filesystem->exists( $file ) );
 
-		$this->assertTrue( $this->filesystem->exists( 'Tests/Integration/' ) );
-		$this->assertTrue( $this->filesystem->delete( 'Tests/Integration/' ) );
-		$this->assertFalse( $this->filesystem->exists( 'Tests/Integration/' ) );
+		// Check with the Url version.
+		$file = $this->filesystem->getUrl( 'Tests/Integration/' );
+		$this->assertTrue( $this->filesystem->exists( $file ) );
+		$this->assertTrue( $this->filesystem->delete( $file ) );
+		$this->assertFalse( $this->filesystem->exists( $file ) );
 	}
 
 	function testShouldNotDeleteDirWhenNotEmpty() {
-		$this->assertTrue( $this->filesystem->exists( 'cache/baz/' ) );
-		$this->assertFalse( $this->filesystem->delete( 'cache/baz/' ) );
-		$this->assertTrue( $this->filesystem->exists( 'cache/baz/' ) );
+		$file = 'cache/baz/';
+		$this->assertTrue( $this->filesystem->exists( $file ) );
+		$this->assertFalse( $this->filesystem->delete( $file ) );
+		$this->assertTrue( $this->filesystem->exists( $file ) );
 
-		$this->assertTrue( $this->filesystem->exists( 'Tests' ) );
-		$this->assertFalse( $this->filesystem->delete( 'Tests', false, 'd' ) );
-		$this->assertTrue( $this->filesystem->exists( 'Tests' ) );
+		// Check with the Url version.
+		$file = $this->filesystem->getUrl( 'Tests' );
+		$this->assertTrue( $this->filesystem->exists( $file ) );
+		$this->assertFalse( $this->filesystem->delete( $file, false, 'd' ) );
+		$this->assertTrue( $this->filesystem->exists( $file ) );
 	}
 
 	function testShouldDeleteDirWhenNotEmpty() {
-		$this->assertTrue( $this->filesystem->exists( 'baz/' ) );
-		$this->assertTrue( $this->filesystem->delete( 'baz/', true ) );
-		$this->assertFalse( $this->filesystem->exists( 'baz/' ) );
+		$file = 'baz/';
+		$this->assertTrue( $this->filesystem->exists( $file ) );
+		$this->assertTrue( $this->filesystem->delete( $file, true ) );
+		$this->assertFalse( $this->filesystem->exists( $file ) );
 
-		$this->assertTrue( $this->filesystem->exists( 'Tests/Unit/' ) );
-		$this->assertTrue( $this->filesystem->delete( 'Tests/Unit/', true ) );
-		$this->assertFalse( $this->filesystem->exists( 'Tests/Unit/' ) );
+		// Check with the Url version.
+		$file = $this->filesystem->getUrl( 'Tests/Unit/' );
+		$this->assertTrue( $this->filesystem->exists( $file ) );
+		$this->assertTrue( $this->filesystem->delete( $file, true ) );
+		$this->assertFalse( $this->filesystem->exists( $file ) );
 
 		// Check that it removes the root directory.
-		$this->assertTrue( $this->filesystem->exists( 'cache' ) );
-		$this->assertTrue( $this->filesystem->rmdir( 'cache', true ) );
-		$this->assertFalse( $this->filesystem->exists( 'cache' ) );
-		$this->assertFalse( $this->filesystem->is_dir( 'cache' ) );
+		$file = 'cache';
+		$this->assertTrue( $this->filesystem->exists( $file ) );
+		$this->assertTrue( $this->filesystem->rmdir( $file, true ) );
+		$this->assertFalse( $this->filesystem->exists( $file ) );
+		$this->assertFalse( $this->filesystem->is_dir( $file ) );
 	}
 }

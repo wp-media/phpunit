@@ -438,6 +438,10 @@ class VirtualFilesystemDirect {
 	 * @return string file or directory path with root.
 	 */
 	protected function prefixRoot( $fileOrDir ) {
+		// Strip off the URL.
+		$fileOrDir = str_replace( 'vfs://', '', $fileOrDir );
+
+		// Bail out if it already has the root.
 		if ( $this->startsWithRoot( $fileOrDir ) ) {
 			return $fileOrDir;
 		}
