@@ -86,6 +86,19 @@ class VirtualFilesystemDirect {
 	}
 
 	/**
+	 * Gets the absolute vfsStream::url for the given file or directory.
+	 *
+	 * @since 1.1
+	 *
+	 * @param string $fileOrDir Path to the file or directory.
+	 *
+	 * @return string absolute url.
+	 */
+	public function getUrl( $fileOrDir ) {
+		return vfsStream::url( $this->prefixRoot( $fileOrDir ) );
+	}
+
+	/**
 	 * Sets the last modified attribute for the given file.
 	 *
 	 * @since 1.1
@@ -396,19 +409,6 @@ class VirtualFilesystemDirect {
 		}
 
 		return $this->getDir( $parentPath );
-	}
-
-	/**
-	 * Gets the absolute vfsStream::url for the given file or directory.
-	 *
-	 * @since 1.1
-	 *
-	 * @param string $fileOrDir Path to the file or directory.
-	 *
-	 * @return string absolute url.
-	 */
-	protected function getUrl( $fileOrDir ) {
-		return vfsStream::url( $this->prefixRoot( $fileOrDir ) );
 	}
 
 	/**
