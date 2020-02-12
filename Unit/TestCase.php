@@ -32,8 +32,8 @@ abstract class TestCase extends PHPUnitTestCase {
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
 
-		if ( self::$stubPolyfills ) {
-			self::stubPolyfills();
+		if ( static::$stubPolyfills ) {
+			static::stubPolyfills();
 		}
 	}
 
@@ -44,7 +44,7 @@ abstract class TestCase extends PHPUnitTestCase {
 		parent::setUp();
 		Monkey\setUp();
 
-		if ( self::$mockCommonWpFunctionsInSetUp ) {
+		if ( static::$mockCommonWpFunctionsInSetUp ) {
 			$this->mockCommonWpFunctions();
 		}
 	}
