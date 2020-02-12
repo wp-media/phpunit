@@ -22,8 +22,30 @@ class Test_PutContents extends TestCase {
 		$this->assertSame( $content, $this->filesystem->get_contents( 'Tests/Unit/SomeClass/getFile.php' ) );
 	}
 
-	function testShouldReturnFalseWhenFileDoesNotExist() {
-		$this->assertFalse( $this->filesystem->put_contents( 'baz/invalid.html', 'New contents' ) );
-		$this->assertFalse( $this->filesystem->put_contents( 'cache/Tests/Unit/invalid.php', 'New contents' ) );
+	function testShouldCreateFileAndPutContentsWhenFileDoesNotExist() {
+		$data = [
+			'baz/newfile.html' => 'Lorem ipsum dolor sit amet',
+			'cache/Tests/Unit/SomeClass/putContents.php' => 'Praesent a nibh in nulla dapibus gravida.',
+		];
+		foreach( $data as $filename => $content ) {
+			$this->assertFalse( $this->filesystem->exists( $filename ) );
+			$this->assertTrue( $this->filesystem->put_contents( $filename, $content ) );
+			$this->assertTrue( $this->filesystem->exists( $filename ) );
+			$this->assertSame( $content, $this->filesystem->get_contents( $filename ) );
+		}
+
+		// Test with fopen() just to be sure.
+		$filename = 'cache/Tests/Unit/SomeClass/createNewFile.php';
+		$this->assertFalse( $this->filesystem->exists( $filename ) );
+		$fp = @fopen( $this->filesystem->getUrl( $filename ), 'wb' );
+		if ( $fp ) {
+			fclose( $fp );
+		}
+		// Yes, it created the new virtual file.
+		$this->assertTrue( $this->filesystem->exists( $filename ) );
+		// Yes, it adds the content to the new file.
+		$contents = 'Praesent a nibh in nulla dapibus gravida.';
+		$this->assertTrue( $this->filesystem->put_contents( $filename, $contents ) );
+		$this->assertSame( $contents, $this->filesystem->get_contents( $filename ) );
 	}
 }
