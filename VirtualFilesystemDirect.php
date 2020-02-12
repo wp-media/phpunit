@@ -153,7 +153,7 @@ class VirtualFilesystemDirect {
 	 * @return bool True on success, false on failure.
 	 */
 	public function put_contents( $filename, $contents, $mode = false ) {
-		$file = $this->getFile( $filename );
+		$file = $this->getOrCreateFile( $filename );
 		if ( is_null( $file ) ) {
 			return false;
 		}
@@ -164,6 +164,32 @@ class VirtualFilesystemDirect {
 		$this->chmod( $filename, $mode );
 
 		return true;
+	}
+
+	/**
+	 * Get file. If doesn't exist, creates it and then returns it.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $filename Absolute path to file.
+	 *
+	 * @return bool|vfsStreamFile file on success; false on failure.
+	 */
+	protected function getOrCreateFile( $filename ) {
+		$filename = $this->prefixRoot( $filename );
+
+		// If the file exists, return it.
+		if ( $this->is_file( $filename ) ) {
+			return $this->getFile( $filename );
+		}
+
+		// Attempt to create the file. If it fails, return false.
+		if ( ! $this->touch( $filename ) ) {
+			return false;
+		}
+
+		// Created it. Get and return the file.
+		return $this->getFile( $filename );
 	}
 
 	/**
@@ -382,6 +408,7 @@ class VirtualFilesystemDirect {
 		if ( $atime == 0 ) {
 			$atime = time();
 		}
+
 		return touch( $this->getUrl( $file ), $time, $atime );
 	}
 
