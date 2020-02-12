@@ -45,11 +45,19 @@ abstract class VirtualFilesystemTestCase extends TestCase {
 	protected $filesystem;
 
 	/**
+	 * URL to the root directory of the virtual filesystem.
+	 *
+	 * @var string
+	 */
+	protected $rootVirtualUrl;
+
+	/**
 	 * Prepares the test environment before each test.
 	 */
 	protected function setUp() {
 		parent::setUp();
 
-		$this->filesystem = new VirtualFilesystemDirect( $this->rootVirtualDir, $this->structure, $this->permissions );
+		$this->filesystem     = new VirtualFilesystemDirect( $this->rootVirtualDir, $this->structure, $this->permissions );
+		$this->rootVirtualUrl = $this->filesystem->getUrl( $this->rootVirtualDir );
 	}
 }
