@@ -65,8 +65,4 @@ function bootstrap_integration_suite( $wp_tests_dir ) {
 	require_once $wp_tests_dir . '/includes/bootstrap.php';
 }
 
-function init_adminonly() {
-
-}
-
 bootstrap_integration_suite( get_wp_tests_dir() );
