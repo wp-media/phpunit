@@ -37,10 +37,12 @@
 	},
 	"scripts": {
 		"test-unit": "./wpmedia-phpunit unit path=Tests/Unit WPMEDIA_PHPUNIT_ROOT_DIR=.",
-		"test-integration": "./wpmedia-phpunit integration path=Tests/Integration/ WPMEDIA_PHPUNIT_ROOT_DIR=.",
+		"test-integration": "./wpmedia-phpunit integration path=Tests/Integration/ WPMEDIA_PHPUNIT_ROOT_DIR=. --exclude-group AdminOnly",
+		"test-integration-admin": "./wpmedia-phpunit integration path=Tests/Integration/ WPMEDIA_PHPUNIT_ROOT_DIR=. --group AdminOnly",
 		"run-tests": [
 			"@test-unit",
-			"@test-integration"
+			"@test-integration",
+			"@test-integration-admin"
 		]
 	}
 }

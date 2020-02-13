@@ -2,6 +2,7 @@
 
 namespace WPMedia\PHPUnit\Integration;
 
+use WPMedia\PHPUnit\BootstrapManager;
 use function WPMedia\PHPUnit\init_test_suite;
 
 require_once dirname( dirname( __FILE__ ) ) . '/bootstrap-functions.php';
@@ -48,8 +49,7 @@ function bootstrap_integration_suite( $wp_tests_dir ) {
 		function() {
 			// Set WP_ADMIN constant when running the AdminOnly group of tests.
 			// This is necessary to set is_admin() for Rocket to load all the admin files.
-			global $argv;
-			if ( isset( $argv[6] ) && '--group' === $argv[6] && 'AdminOnly' === $argv[7] ) {
+			if ( BootstrapManager::isGroup( 'AdminOnly' ) ) {
 				define( 'WP_ADMIN', true );
 			}
 		},
