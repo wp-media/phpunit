@@ -10,8 +10,9 @@ use WPAjaxDieStopException;
 use WP_Ajax_UnitTestCase;
 
 abstract class AjaxTestCase extends WP_Ajax_UnitTestCase {
-	use TestCaseTrait;
+	use ApiTrait;
 	use MockeryPHPUnitIntegration;
+	use TestCaseTrait;
 
 	/**
 	 * AJAX Action. Change this value in each test class.
@@ -19,6 +20,15 @@ abstract class AjaxTestCase extends WP_Ajax_UnitTestCase {
 	 * @var string
 	 */
 	protected $action;
+
+	/**
+	 * Name of the API credentials config file, if applicable. Set in the test or new TestCase.
+	 *
+	 * For example: rocketcdn.php or cloudflare.php.
+	 *
+	 * @var string
+	 */
+	protected static $api_credentials_config_file;
 
 	/**
 	 * Prepares the test environment before each test.
