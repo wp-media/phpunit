@@ -8,11 +8,22 @@ use WP_REST_Server;
 use WP_UnitTestCase;
 
 abstract class RESTfulTestCase extends TestCase {
+	use ApiTrait;
+
 	/**
 	 * Instance of the WordPress REST Server.
 	 * @var WP_REST_Server
 	 */
 	protected $server;
+
+	/**
+	 * Name of the API credentials config file, if applicable. Set in the test or new TestCase.
+	 *
+	 * For example: rocketcdn.php or cloudflare.php.
+	 *
+	 * @var string
+	 */
+	protected static $api_credentials_config_file = 'rocketcdn.php';
 
 	/**
 	 * Setup the WP REST API Server.
