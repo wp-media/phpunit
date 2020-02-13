@@ -5,7 +5,7 @@ namespace WPMedia\PHPUnit;
 class BootstrapManager {
 
 	/**
-	 * Builds up the command line arguments that PHPUnit needs and then loads phpunit.
+	 * Builds up the command-line arguments that PHPUnit needs and then loads phpunit.
 	 *
 	 * @since 1.0.0
 	 *
@@ -41,6 +41,32 @@ class BootstrapManager {
 			$path = 'Tests/' . ucfirst( $which_testsuite );
 		}
 		define( 'WPMEDIA_PHPUNIT_ROOT_TEST_DIR', WPMEDIA_PHPUNIT_ROOT_DIR . DIRECTORY_SEPARATOR . $path );
+	}
+
+	/**
+	 * Checks if the --group exists and matches the given name.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $group_name Group name to check.
+	 *
+	 * @return bool true when --group exists and name matches; else false.
+	 */
+	public static function isGroup( $group_name ) {
+		$group = self::getArg( '--group' );
+		if ( false === $group ) {
+			return false;
+		}
+
+		$group_name_index = ++$group['index'];
+
+		// Bail out if no groupName given.
+		if ( ! isset( $_SERVER['argv'][ $group_name_index ] ) ) {
+			return false;
+		}
+
+		// The next arg after the `--group` is the group name. Check if it matches.
+		return ( $group_name === $_SERVER['argv'][ $group_name_index ] );
 	}
 
 	/**
@@ -124,11 +150,11 @@ class BootstrapManager {
 	}
 
 	/**
-	 * Description.
+	 * Gets the requested command line argument value, if it exists.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param $key
+	 * @param string $key Command-line argument.
 	 *
 	 * @return array|bool
 	 */
