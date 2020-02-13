@@ -23,7 +23,7 @@ abstract class RESTfulTestCase extends TestCase {
 	 *
 	 * @var string
 	 */
-	protected static $api_credentials_config_file = 'rocketcdn.php';
+	protected static $api_credentials_config_file;
 
 	/**
 	 * Setup the WP REST API Server.
