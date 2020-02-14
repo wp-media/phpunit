@@ -2,8 +2,12 @@
 
 namespace WPMedia\PHPUnit\Integration;
 
-
 trait ApiTrait {
+	protected static $path_to_config;
+
+	protected static function pathToApiCredentialsConfigFile( $path ) {
+		self::$path_to_config = $path;
+	}
 
 	/**
 	 * Gets the credential's value from either an environment variable (stored locally on the machine or CI) or from a local constant defined in `tests/env/local/cloudflare.php`.
@@ -22,8 +26,7 @@ trait ApiTrait {
 			return '';
 		}
 
-		$config_file = dirname( __DIR__ ) . '/env/local/' . static::$api_credentials_config_file;
-
+		$config_file = self::$path_to_config . static::$api_credentials_config_file;
 		if ( ! is_readable( $config_file ) ) {
 			return '';
 		}
