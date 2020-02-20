@@ -19,4 +19,9 @@
 			<exclude>../../../../Tests/Integration/bootstrap.php</exclude>
 		</testsuite>
 	</testsuites>
+	<groups>
+		<exclude>
+			<group>Exclude</group>
+		</exclude>
+	</groups>
 </phpunit>
