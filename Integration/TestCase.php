@@ -26,4 +26,24 @@ abstract class TestCase extends WP_UnitTestCase {
 		Monkey\tearDown();
 		parent::tearDown();
 	}
+
+	public function return_0() {
+		return 0;
+	}
+
+	public function return_1() {
+		return 1;
+	}
+
+	public function return_false() {
+		return false;
+	}
+
+	public function return_true() {
+		return true;
+	}
+
+	public function return_empty_array() {
+		return [];
+	}
 }
