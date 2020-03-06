@@ -14,6 +14,28 @@ trait TestCaseTrait {
 	}
 
 	/**
+	 * Gets the test data, if it exists, for this test class.
+	 *
+	 * @param string $dir      Directory of the test class.
+	 * @param string $filename Test data filename without the .php extension.
+	 *
+	 * @return array array of test data.
+	 */
+	protected function getTestData( $dir, $filename ) {
+		if ( empty( $dir ) || empty( $filename ) ) {
+			return [];
+		}
+
+		$dir = str_replace( [ 'Integration', 'Unit' ], 'Fixtures', $dir );
+		$dir = rtrim( $dir, '\\/' );
+		$testdata = "$dir/{$filename}.php";
+
+		return is_readable( $testdata )
+			? require $testdata
+			: [];
+	}
+
+	/**
 	 * Get reflective access to the private/protected method.
 	 *
 	 * @param string $method_name Method name for which to gain access.
