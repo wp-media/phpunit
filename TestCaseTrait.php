@@ -26,7 +26,7 @@ trait TestCaseTrait {
 			return [];
 		}
 
-		$dir = str_replace( [ 'Integration', 'Unit' ], 'TestData', $dir );
+		$dir = str_replace( [ 'Integration', 'Unit' ], 'Fixtures', $dir );
 		$dir = rtrim( $dir, '\\/' );
 		$testdata = "$dir/{$filename}.php";
 
