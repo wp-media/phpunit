@@ -52,6 +52,11 @@ function bootstrap_integration_suite( $wp_tests_dir ) {
 			if ( BootstrapManager::isGroup( 'AdminOnly' ) ) {
 				define( 'WP_ADMIN', true );
 			}
+
+			// set MULTISITE constant when running Multisite group of tests.
+			if ( BootstrapManager::isGroup( 'Multisite' ) ) {
+				define( 'MULTISITE', true );
+			}
 		},
 		9
 	);
