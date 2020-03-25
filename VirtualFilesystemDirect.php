@@ -281,23 +281,10 @@ class VirtualFilesystemDirect {
 	 *
 	 * @param string $dir Virtual directory absolute path.
 	 *
-	 * @return array all directories within the given root directory.
+	 * @return array of all directories.
 	 */
 	public function getDirsListing( $dir ) {
-		$iterator = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator( $this->getUrl( $dir ), FilesystemIterator::SKIP_DOTS ),
-			RecursiveIteratorIterator::SELF_FIRST
-		);
-
-		$items = [];
-		foreach ( $iterator as $item ) {
-			if ( ! $item->isDir() ) {
-				continue;
-			}
-			$items[] = $item->getPathname() . DIRECTORY_SEPARATOR;
-		}
-
-		return $items;
+		return $this->scanFS( $dir, true );
 	}
 
 	/**
@@ -305,19 +292,10 @@ class VirtualFilesystemDirect {
 	 *
 	 * @param string $dir Virtual directory absolute path.
 	 *
-	 * @return array all files within the given root directory.
+	 * @return array of all files.
 	 */
 	public function getFilesListing( $dir ) {
-		$iterator = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator( $this->getUrl( $dir ), FilesystemIterator::SKIP_DOTS )
-		);
-
-		$items = [];
-		foreach ( $iterator as $item ) {
-			$items[] = $item->getPathname();
-		}
-
-		return $items;
+		return $this->scanFS( $dir, false, true );
 	}
 
 	/**
@@ -325,19 +303,32 @@ class VirtualFilesystemDirect {
 	 *
 	 * @param string $dir Virtual directory absolute path.
 	 *
-	 * @return array all files and directories within the given root directory.
+	 * @return array of all files and directories.
 	 */
 	public function getListing( $dir ) {
+		return $this->scanFS( $dir );
+	}
+
+	/**
+	 * Scans the filesystem and returns a list of files, directories, or both within the given virtual root directory.
+	 *
+	 * @param string  $dir       Virtual directory absolute path.
+	 * @param boolean $dirOnly   Optional. When true, returns only directories.
+	 * @param boolean $filesOnly Optional. When true, returns only files.
+	 *
+	 * @return array of all files, directories, or both.
+	 */
+	protected function scanFS( $dir, $dirOnly = false, $filesOnly = false ) {
 		$iterator = new RecursiveIteratorIterator(
 			new RecursiveDirectoryIterator( $this->getUrl( $dir ), FilesystemIterator::SKIP_DOTS ),
-			RecursiveIteratorIterator::SELF_FIRST
+			$filesOnly ? RecursiveIteratorIterator::LEAVES_ONLY : RecursiveIteratorIterator::SELF_FIRST
 		);
 
 		$items = [];
 		foreach ( $iterator as $item ) {
-			if ( $item->isDir() ) {
+			if ( ! $filesOnly && $item->isDir() ) {
 				$items[] = $item->getPathname() . DIRECTORY_SEPARATOR;
-			} else {
+			} elseif ( ! $dirOnly ) {
 				$items[] = $item->getPathname();
 			}
 		}
