@@ -1,6 +1,5 @@
 <?php
 
-
 namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
 
 /**
