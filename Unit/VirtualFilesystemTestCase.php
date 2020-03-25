@@ -12,7 +12,7 @@ abstract class VirtualFilesystemTestCase extends TestCase {
 	 *
 	 * @var string
 	 */
-	protected $rootVirtualDir = 'cache';
+	protected $rootVirtualDir = 'public';
 
 	/**
 	 * Virtual Directory filesystem structure under the root virtual directory.
