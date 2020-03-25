@@ -321,6 +321,31 @@ class VirtualFilesystemDirect {
 	}
 
 	/**
+	 * Gets a list of all the files and directories within the given virtual root directory.
+	 *
+	 * @param string $dir Virtual directory absolute path.
+	 *
+	 * @return array all files and directories within the given root directory.
+	 */
+	public function getListing( $dir ) {
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator( $this->getUrl( $dir ), FilesystemIterator::SKIP_DOTS ),
+			RecursiveIteratorIterator::SELF_FIRST
+		);
+
+		$items = [];
+		foreach ( $iterator as $item ) {
+			if ( $item->isDir() ) {
+				$items[] = $item->getPathname() . DIRECTORY_SEPARATOR;
+			} else {
+				$items[] = $item->getPathname();
+			}
+		}
+
+		return $items;
+	}
+
+	/**
 	 * Checks if resource is a directory.
 	 *
 	 * @since 1.1
