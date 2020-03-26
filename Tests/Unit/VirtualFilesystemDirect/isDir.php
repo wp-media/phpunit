@@ -8,20 +8,20 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
  */
 class Test_IsDir extends TestCase {
 
-	function testShouldReturnTrueWhenDir() {
+	public function testShouldReturnTrueWhenDir() {
 		$this->assertTrue( $this->filesystem->is_dir( 'Tests' ) );
 		$this->assertTrue( $this->filesystem->is_dir( 'Tests/Unit/' ) );
 		$this->assertTrue( $this->filesystem->is_dir( 'Tests/Unit/SomeClass' ) );
 		$this->assertTrue( $this->filesystem->is_dir( 'baz' ) );
 	}
 
-	function testShouldReturnFalseWhenFileGiven() {
+	public function testShouldReturnFalseWhenFileGiven() {
 		$this->assertFalse( $this->filesystem->is_dir( 'Tests/Unit/bootstrap.php' ) );
 		$this->assertFalse( $this->filesystem->is_dir( 'Tests/Unit/SomeClass/getFile.php' ) );
-		$this->assertFalse( $this->filesystem->is_dir( 'cache/baz/index.html' ) );
+		$this->assertFalse( $this->filesystem->is_dir( 'public/baz/index.html' ) );
 	}
 
-	function testShouldReturnFalseWhenDirDoesNotExist() {
+	public function testShouldReturnFalseWhenDirDoesNotExist() {
 		$this->assertFalse( $this->filesystem->is_dir( 'Tests/Rocket' ) );
 		$this->assertFalse( $this->filesystem->is_dir( 'Tests/Invalid/' ) );
 	}

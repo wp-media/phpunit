@@ -8,7 +8,7 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
  */
 class Test_Rmdir extends TestCase {
 
-	function testShouldRemoveWhenDirExistsAndEmpty() {
+	public function testShouldRemoveWhenDirExistsAndEmpty() {
 		$this->assertTrue( $this->filesystem->exists( 'Tests/includes/' ) );
 		$this->assertTrue( $this->filesystem->rmdir( 'Tests/includes/' ) );
 		$this->assertFalse( $this->filesystem->exists( 'Tests/includes/' ) );
@@ -18,17 +18,17 @@ class Test_Rmdir extends TestCase {
 		$this->assertFalse( $this->filesystem->exists( 'Tests/Integration/' ) );
 	}
 
-	function testShouldNotRemoveWhenDirNotEmpty() {
-		$this->assertTrue( $this->filesystem->exists( 'cache/baz/' ) );
-		$this->assertFalse( $this->filesystem->rmdir( 'cache/baz/' ) );
-		$this->assertTrue( $this->filesystem->exists( 'cache/baz/' ) );
+	public function testShouldNotRemoveWhenDirNotEmpty() {
+		$this->assertTrue( $this->filesystem->exists( 'public/baz/' ) );
+		$this->assertFalse( $this->filesystem->rmdir( 'public/baz/' ) );
+		$this->assertTrue( $this->filesystem->exists( 'public/baz/' ) );
 
 		$this->assertTrue( $this->filesystem->exists( 'Tests' ) );
 		$this->assertFalse( $this->filesystem->rmdir( 'Tests', false, 'd' ) );
 		$this->assertTrue( $this->filesystem->exists( 'Tests' ) );
 	}
 
-	function testShouldRemoveWhenRecursiveAndNotEmpty() {
+	public function testShouldRemoveWhenRecursiveAndNotEmpty() {
 		$this->assertTrue( $this->filesystem->exists( 'baz/' ) );
 		$this->assertTrue( $this->filesystem->rmdir( 'baz/', true ) );
 		$this->assertFalse( $this->filesystem->exists( 'baz/' ) );
@@ -38,9 +38,9 @@ class Test_Rmdir extends TestCase {
 		$this->assertFalse( $this->filesystem->exists( 'Tests/Unit/' ) );
 
 		// Check that it removes the root directory.
-		$this->assertTrue( $this->filesystem->exists( 'cache' ) );
-		$this->assertTrue( $this->filesystem->rmdir( 'cache', true ) );
-		$this->assertFalse( $this->filesystem->exists( 'cache' ) );
-		$this->assertFalse( $this->filesystem->is_dir( 'cache' ) );
+		$this->assertTrue( $this->filesystem->exists( 'public' ) );
+		$this->assertTrue( $this->filesystem->rmdir( 'public', true ) );
+		$this->assertFalse( $this->filesystem->exists( 'public' ) );
+		$this->assertFalse( $this->filesystem->is_dir( 'public' ) );
 	}
 }

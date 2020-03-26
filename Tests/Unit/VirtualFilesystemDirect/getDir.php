@@ -8,15 +8,15 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
  */
 class Test_GetDir extends TestCase {
 
-	function testShouldReturnInstanceWhenDirExists() {
+	public function testShouldReturnInstanceWhenDirExists() {
 		$this->assertInstanceOf( 'org\bovigo\vfs\vfsStreamDirectory', $this->filesystem->getDir( 'Tests/Unit/SomeClass' ) );
-		$this->assertInstanceOf( 'org\bovigo\vfs\vfsStreamDirectory', $this->filesystem->getDir( 'cache/Tests/' ) );
+		$this->assertInstanceOf( 'org\bovigo\vfs\vfsStreamDirectory', $this->filesystem->getDir( 'public/Tests/' ) );
 		$this->assertInstanceOf( 'org\bovigo\vfs\vfsStreamDirectory', $this->filesystem->getDir( 'baz' ) );
 	}
 
-	function testShouldReturnNullWhenDirDoesNotExist() {
-		$this->assertNull( $this->filesystem->getDir( 'cache/Invalid/' ) );
+	public function testShouldReturnNullWhenDirDoesNotExist() {
+		$this->assertNull( $this->filesystem->getDir( 'public/Invalid/' ) );
 		$this->assertNull( $this->filesystem->getDir( 'Invalid/' ) );
-		$this->assertNull( $this->filesystem->getDir( 'cache/Tests/Unit/Invalid' ) );
+		$this->assertNull( $this->filesystem->getDir( 'public/Tests/Unit/Invalid' ) );
 	}
 }

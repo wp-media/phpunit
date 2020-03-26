@@ -8,24 +8,24 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
  */
 class Test_Touch extends TestCase {
 
-	function testShouldChangeModifiedAndAccessTimesWhenFileExists() {
+	public function testShouldChangeModifiedAndAccessTimesWhenFileExists() {
 		$path = 'baz/index.html';
 		$this->assertTrue( $this->filesystem->touch( $path, 303, 313 ) );
 		$file = $this->filesystem->getFile( $path );
 		$this->assertEquals( 303, $file->filemtime() );
 		$this->assertEquals( 313, $file->fileatime() );
 
-		$path = 'cache/Tests/Unit/SomeClass/getFile.php';
+		$path = 'public/Tests/Unit/SomeClass/getFile.php';
 		$this->assertTrue( $this->filesystem->touch( $path, 603, 613 ) );
 		$file = $this->filesystem->getFile( $path );
 		$this->assertEquals( 603, $file->filemtime() );
 		$this->assertEquals( 613, $file->fileatime() );
 	}
 
-	function testShouldChangeModifiedAndAccessTimesWhenFileExistsAndTimesNotGiven() {
+	public function testShouldChangeModifiedAndAccessTimesWhenFileExistsAndTimesNotGiven() {
 		$time = strtotime( '11 hours ago' );
 
-		foreach ( [ 'baz/index.html', 'cache/Tests/Unit/SomeClass/getFile.php' ] as $path ) {
+		foreach ( [ 'baz/index.html', 'public/Tests/Unit/SomeClass/getFile.php' ] as $path ) {
 			$file = $this->filesystem->getFile( $path );
 			$file->lastModified( $time );
 			$file->lastAccessed( $time );
@@ -35,15 +35,15 @@ class Test_Touch extends TestCase {
 		}
 	}
 
-	function testShouldCreateFileWhenDoesNotExist() {
-		foreach ( [ 'baz/newfile.html', 'cache/Tests/Unit/SomeClass/newfile.php' ] as $path ) {
+	public function testShouldCreateFileWhenDoesNotExist() {
+		foreach ( [ 'baz/newfile.html', 'public/Tests/Unit/SomeClass/newfile.php' ] as $path ) {
 			$this->assertTrue( $this->filesystem->touch( $path ) );
 			$this->assertTrue( $this->filesystem->exists( $path ) );
 			$this->assertTrue( $this->filesystem->is_file( $path ) );
 		}
 
 		// Check when giving time(s).
-		$path = 'cache/Tests/Unit/newfile.php';
+		$path = 'public/Tests/Unit/newfile.php';
 		$time = strtotime( '11 hours ago' );
 		$this->assertTrue( $this->filesystem->touch( $path, $time, $time ) );
 		$this->assertTrue( $this->filesystem->exists( $path ) );

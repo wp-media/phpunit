@@ -10,13 +10,13 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
 class Test_GetDirsListing extends TestCase {
 
 	/**
-	 * @dataProvider addDataProvider
+	 * @dataProvider listingTestData
 	 */
 	public function testShouldReturnListingOfAllDirs( $dir, $expected ) {
 		$this->assertSame( $expected, $this->filesystem->getDirsListing( $dir ) );
 	}
 
-	public function addDataProvider() {
+	public function listingTestData() {
 		return [
 			[
 				'Tests/Integration/',

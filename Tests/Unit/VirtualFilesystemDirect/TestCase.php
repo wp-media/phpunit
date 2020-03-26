@@ -5,21 +5,32 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
 use WPMedia\PHPUnit\Unit\VirtualFilesystemTestCase;
 
 abstract class TestCase extends VirtualFilesystemTestCase {
+	protected $path_to_test_data = 'structure.php';
 
-	protected $structure = [
-		'Tests' => [
-			'Integration'  => [],
-			'Unit'         => [
-				'bootstrap.php' => 'Donec turpis ante, aliquam vitae egestas ac, rhoncus ut quam.',
-				'SomeClass'     => [
-					'getFile.php' => '',
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+
+		static::$path_to_fixtures_dir = WPMEDIA_PHPUNIT_ROOT_DIR . '/Tests/Fixtures/';
+	}
+
+	/**
+	 * Gets the default virtual directory filesystem structure.
+	 *
+	 * @return array default structure.
+	 */
+	private function getDefaultVfs() {
+		return [
+			'wp-admin'      => [],
+			'wp-content'    => [
+				'mu-plugins' => [],
+				'plugins'    => [
+					'wp-rocket' => [],
 				],
+				'themes'     => [],
+				'uploads'    => [],
 			],
-			'includes'     => [],
-			'TestCase.php' => 'Maecenas eget erat ligula.',
-		],
-		'baz'   => [
-			'index.html' => 'Lorem ipsum dolor sit amet.',
-		],
-	];
+			'wp-includes'   => [],
+			'wp-config.php' => '',
+		];
+	}
 }

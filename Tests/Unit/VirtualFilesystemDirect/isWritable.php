@@ -7,21 +7,19 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
  * @group  VirtualFilesystemDirect
  */
 class Test_IsWritable extends TestCase {
-	protected $structure = [ 'index.html' => 'Lorem ipsum dolor sit amet.' 	];
 
-
-	function testShouldReturnTrueWhenFileExistsAndIsReadable() {
-		$this->assertTrue( $this->filesystem->is_writable( 'index.html' ) );
-		$this->assertTrue( $this->filesystem->is_writable( 'cache/index.html' ) );
+	public function testShouldReturnTrueWhenFileExistsAndIsReadable() {
+		$this->assertTrue( $this->filesystem->is_writable( 'baz/index.html' ) );
+		$this->assertTrue( $this->filesystem->is_writable( 'public/baz/index.html' ) );
 	}
 
-	function testShouldReturnFalseWhenNoAccess() {
-		$file = $this->filesystem->getFile( 'index.html' ) ;
+	public function testShouldReturnFalseWhenNoAccess() {
+		$file = $this->filesystem->getFile( 'baz/index.html' );
 		$file->chmod( 000 ); // Only root user.
-		$this->assertFalse( $this->filesystem->is_writable( 'index.html' ) );
+		$this->assertFalse( $this->filesystem->is_writable( 'baz/index.html' ) );
 	}
 
-	function testShouldReturnFalseWhenFileDoesNotExist() {
+	public function testShouldReturnFalseWhenFileDoesNotExist() {
 		$this->assertFalse( $this->filesystem->is_writable( 'doesnotexist.html' ) );
 	}
 }

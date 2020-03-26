@@ -8,15 +8,15 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
  */
 class Test_GetFile extends TestCase {
 
-	function testShouldReturnInstanceOfFileWhenFileExists() {
+	public function testShouldReturnInstanceOfFileWhenFileExists() {
 		$this->assertInstanceOf( 'org\bovigo\vfs\vfsStreamFile', $this->filesystem->getFile( 'Tests/Unit/SomeClass/getFile.php' ) );
-		$this->assertInstanceOf( 'org\bovigo\vfs\vfsStreamFile', $this->filesystem->getFile( 'cache/Tests/TestCase.php' ) );
+		$this->assertInstanceOf( 'org\bovigo\vfs\vfsStreamFile', $this->filesystem->getFile( 'public/Tests/TestCase.php' ) );
 	}
 
-	function testShouldReturnNullWhenFileDoesNotExist() {
+	public function testShouldReturnNullWhenFileDoesNotExist() {
 		$this->assertNull( $this->filesystem->getFile( 'doesnotexist.html' ) );
 		$this->assertNull( $this->filesystem->getFile( 'Tests/includes/index.php' ) );
 		$this->assertNull( $this->filesystem->getFile( 'baz/bar/index.php' ) );
-		$this->assertNull( $this->filesystem->getFile( 'cache/Tests/includes/index.php' ) );
+		$this->assertNull( $this->filesystem->getFile( 'public/Tests/includes/index.php' ) );
 	}
 }
