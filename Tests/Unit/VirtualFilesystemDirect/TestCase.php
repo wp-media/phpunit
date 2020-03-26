@@ -12,25 +12,4 @@ abstract class TestCase extends VirtualFilesystemTestCase {
 
 		static::$path_to_fixtures_dir = WPMEDIA_PHPUNIT_ROOT_DIR . '/Tests/Fixtures/';
 	}
-
-	/**
-	 * Gets the default virtual directory filesystem structure.
-	 *
-	 * @return array default structure.
-	 */
-	private function getDefaultVfs() {
-		return [
-			'wp-admin'      => [],
-			'wp-content'    => [
-				'mu-plugins' => [],
-				'plugins'    => [
-					'wp-rocket' => [],
-				],
-				'themes'     => [],
-				'uploads'    => [],
-			],
-			'wp-includes'   => [],
-			'wp-config.php' => '',
-		];
-	}
 }
