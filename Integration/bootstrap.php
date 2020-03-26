@@ -49,12 +49,12 @@ function bootstrap_integration_suite( $wp_tests_dir ) {
 		function() {
 			// Set WP_ADMIN constant when running the AdminOnly group of tests.
 			// This is necessary to set is_admin() for Rocket to load all the admin files.
-			if ( BootstrapManager::isGroup( 'AdminOnly' ) ) {
+			if ( BootstrapManager::isGroup( 'AdminOnly' ) && ! defined( 'WP_ADMIN' ) ) {
 				define( 'WP_ADMIN', true );
 			}
 
-			// set MULTISITE constant when running Multisite group of tests.
-			if ( BootstrapManager::isGroup( 'Multisite' ) ) {
+			// Set MULTISITE constant when running the Multisite group of tests.
+			if ( BootstrapManager::isGroup( 'Multisite' ) && ! defined( 'MULTISITE' ) ) {
 				define( 'MULTISITE', true );
 			}
 		},
