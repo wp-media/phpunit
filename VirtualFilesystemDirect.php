@@ -2,10 +2,13 @@
 
 namespace WPMedia\PHPUnit;
 
+use FilesystemIterator;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamAbstractContent;
 use org\bovigo\vfs\vfsStreamFile;
 use org\bovigo\vfs\vfsStreamDirectory;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 /**
  * Virtual filesystem (emulates WP_Filesystem_Direct) using vfsStream.
@@ -41,9 +44,10 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $rootDirname Optional. Name of the root filesystem directory.
 	 * @param array  $structure   Optional. Starting filesystem structure for the root directory.
 	 * @param int    $permissions Optional. File permissions for the root directory.
+	 *
+	 * @param string $rootDirname Optional. Name of the root filesystem directory.
 	 */
 	public function __construct( $rootDirname = 'cache', array $structure = [], $permissions = 0755 ) {
 		$this->root        = rtrim( $rootDirname, '/\\' );
@@ -103,8 +107,9 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string|vfsStreamFile $file      Absolute path to file when string or instance of vfsStreamFile.
 	 * @param string|int           $filectime Last modification time to set for the file.
+	 *
+	 * @param string|vfsStreamFile $file      Absolute path to file when string or instance of vfsStreamFile.
 	 *
 	 * @return int file's filectime when file exists; else null.
 	 */
@@ -146,9 +151,10 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string    $filename Absolute path to file.
 	 * @param string    $contents The data to write.
 	 * @param int|false $mode     Optional. The file permissions as octal number, usually 0644. Default false.
+	 *
+	 * @param string    $filename Absolute path to file.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -197,10 +203,11 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string    $fileOrDir Path to the file or directory.
 	 * @param int|false $mode      Optional. The permissions as octal number, usually 0644 for files,
 	 *                             0755 for directories. Default false.
 	 * @param bool      $recursive Optional. If set to true, changes file group recursively. Default false.
+	 *
+	 * @param string    $fileOrDir Path to the file or directory.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -227,9 +234,10 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string       $fileOrDir Path to the file or directory.
 	 * @param bool         $recursive Optional. If set to true, changes file group recursively. Default false.
 	 * @param string|false $type      Optional. Type of resource. 'f' for file, 'd' for directory. Default false.
+	 *
+	 * @param string       $fileOrDir Path to the file or directory.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -266,6 +274,66 @@ class VirtualFilesystemDirect {
 			||
 			$this->is_file( $fileOrDir )
 		);
+	}
+
+	/**
+	 * Gets a list of all the directories within the given virtual root directory.
+	 *
+	 * @param string $dir Virtual directory absolute path.
+	 *
+	 * @return array of all directories.
+	 */
+	public function getDirsListing( $dir ) {
+		return $this->scanFS( $dir, true );
+	}
+
+	/**
+	 * Gets a list of all the files within the given virtual root directory.
+	 *
+	 * @param string $dir Virtual directory absolute path.
+	 *
+	 * @return array of all files.
+	 */
+	public function getFilesListing( $dir ) {
+		return $this->scanFS( $dir, false, true );
+	}
+
+	/**
+	 * Gets a list of all the files and directories within the given virtual root directory.
+	 *
+	 * @param string $dir Virtual directory absolute path.
+	 *
+	 * @return array of all files and directories.
+	 */
+	public function getListing( $dir ) {
+		return $this->scanFS( $dir );
+	}
+
+	/**
+	 * Scans the filesystem and returns a list of files, directories, or both within the given virtual root directory.
+	 *
+	 * @param string  $dir       Virtual directory absolute path.
+	 * @param boolean $dirOnly   Optional. When true, returns only directories.
+	 * @param boolean $filesOnly Optional. When true, returns only files.
+	 *
+	 * @return array of all files, directories, or both.
+	 */
+	protected function scanFS( $dir, $dirOnly = false, $filesOnly = false ) {
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator( $this->getUrl( $dir ), FilesystemIterator::SKIP_DOTS ),
+			$filesOnly ? RecursiveIteratorIterator::LEAVES_ONLY : RecursiveIteratorIterator::SELF_FIRST
+		);
+
+		$items = [];
+		foreach ( $iterator as $item ) {
+			if ( ! $filesOnly && $item->isDir() ) {
+				$items[] = $item->getPathname() . DIRECTORY_SEPARATOR;
+			} elseif ( ! $dirOnly ) {
+				$items[] = $item->getPathname();
+			}
+		}
+
+		return $items;
 	}
 
 	/**
@@ -333,8 +401,9 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string    $path  Path for new directory.
 	 * @param int|false $chmod Optional. The permissions as octal number (or false to skip chmod). Default false.
+	 *
+	 * @param string    $path  Path for new directory.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -353,8 +422,9 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $dir       Path to directory.
 	 * @param bool   $recursive Optional. Whether to recursively remove files/directories. Default false.
+	 *
+	 * @param string $dir       Path to directory.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -393,11 +463,12 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string $file  Path to file.
 	 * @param int    $time  Optional. Modified time to set for file.
 	 *                      Default 0.
 	 * @param int    $atime Optional. Access time to set for file.
 	 *                      Default 0.
+	 *
+	 * @param string $file  Path to file.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -417,8 +488,9 @@ class VirtualFilesystemDirect {
 	 *
 	 * @since 1.1
 	 *
-	 * @param string             $dirname Child directory name.
 	 * @param vfsStreamDirectory $child   Instance of the child directory.
+	 *
+	 * @param string             $dirname Child directory name.
 	 *
 	 * @return vfsStreamDirectory|null parent directory on success; null when no parent directory.
 	 */

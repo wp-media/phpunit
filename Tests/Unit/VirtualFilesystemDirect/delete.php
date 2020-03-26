@@ -8,7 +8,7 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
  */
 class Test_Delete extends TestCase {
 
-	function testShouldDeleteFileWhenExists() {
+	public function testShouldDeleteFileWhenExists() {
 		$file = 'baz/index.html';
 		$this->assertTrue( $this->filesystem->exists( $file ) );
 		$this->assertTrue( $this->filesystem->delete( $file ) );
@@ -21,7 +21,7 @@ class Test_Delete extends TestCase {
 		$this->assertFalse( $this->filesystem->exists( $file ) );
 	}
 
-	function testShouldDeleteDirWhenExistsAndEmpty() {
+	public function testShouldDeleteDirWhenExistsAndEmpty() {
 		$file = 'Tests/includes/';
 		$this->assertTrue( $this->filesystem->exists( $file ) );
 		$this->assertTrue( $this->filesystem->delete( $file ) );
@@ -34,8 +34,8 @@ class Test_Delete extends TestCase {
 		$this->assertFalse( $this->filesystem->exists( $file ) );
 	}
 
-	function testShouldNotDeleteDirWhenNotEmpty() {
-		$file = 'cache/baz/';
+	public function testShouldNotDeleteDirWhenNotEmpty() {
+		$file = 'public/baz/';
 		$this->assertTrue( $this->filesystem->exists( $file ) );
 		$this->assertFalse( $this->filesystem->delete( $file ) );
 		$this->assertTrue( $this->filesystem->exists( $file ) );
@@ -47,7 +47,7 @@ class Test_Delete extends TestCase {
 		$this->assertTrue( $this->filesystem->exists( $file ) );
 	}
 
-	function testShouldDeleteDirWhenNotEmpty() {
+	public function testShouldDeleteDirWhenNotEmpty() {
 		$file = 'baz/';
 		$this->assertTrue( $this->filesystem->exists( $file ) );
 		$this->assertTrue( $this->filesystem->delete( $file, true ) );
@@ -60,7 +60,7 @@ class Test_Delete extends TestCase {
 		$this->assertFalse( $this->filesystem->exists( $file ) );
 
 		// Check that it removes the root directory.
-		$file = 'cache';
+		$file = 'public';
 		$this->assertTrue( $this->filesystem->exists( $file ) );
 		$this->assertTrue( $this->filesystem->rmdir( $file, true ) );
 		$this->assertFalse( $this->filesystem->exists( $file ) );

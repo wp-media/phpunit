@@ -3,32 +3,26 @@
 namespace WPMedia\PHPUnit\Unit;
 
 use Brains\Monkey\Functions;
-use WPMedia\PHPUnit\VirtualFilesystemDirect;
+use WPMedia\PHPUnit\VirtualFilesystemTestTrait;
 
 abstract class VirtualFilesystemTestCase extends TestCase {
+
+	use VirtualFilesystemTestTrait;
+
+	/**
+	 * Path to the config and test data in the Fixtures directory.
+	 * Set this path in each test class.
+	 *
+	 * @var string
+	 */
+	protected $path_to_test_data;
 
 	/**
 	 * The root virtual directory name.
 	 *
 	 * @var string
 	 */
-	protected $rootVirtualDir = 'cache';
-
-	/**
-	 * Virtual Directory filesystem structure under the root virtual directory.
-	 *
-	 * @var array
-	 */
-	protected $structure = [
-		'busting'      => [
-			'1' => [],
-		],
-		'critical-css' => [],
-		'min'          => [],
-		'wp-rocket'    => [
-			'index.html' => '',
-		],
-	];
+	protected $rootVirtualDir = 'public';
 
 	/**
 	 * Virtual directory and file permissions.
@@ -38,26 +32,25 @@ abstract class VirtualFilesystemTestCase extends TestCase {
 	protected $permissions = 0777;
 
 	/**
-	 * Instance of the virtual filesystem.
-	 *
-	 * @var VirtualFilesystemDirect
-	 */
-	protected $filesystem;
-
-	/**
-	 * URL to the root directory of the virtual filesystem.
-	 *
-	 * @var string
-	 */
-	protected $rootVirtualUrl;
-
-	/**
 	 * Prepares the test environment before each test.
 	 */
-	protected function setUp() {
-		parent::setUp();
+	public function setUp() {
+		$this->init();
 
-		$this->filesystem     = new VirtualFilesystemDirect( $this->rootVirtualDir, $this->structure, $this->permissions );
-		$this->rootVirtualUrl = $this->filesystem->getUrl( $this->rootVirtualDir );
+		parent::setUp();
+	}
+
+	/**
+	 * Gets the default virtual directory filesystem structure.
+	 *
+	 * @return array default structure.
+	 */
+	public function getDefaultVfs() {
+		return [
+			'Tests' => [
+				'Integration' => [],
+				'Unit'        => [],
+			],
+		];
 	}
 }

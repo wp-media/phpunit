@@ -8,12 +8,12 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
  */
 class Test_PutContents extends TestCase {
 
-	function testShouldPutContentsWhenFileExists() {
-		$original = $this->filesystem->get_contents( 'cache/baz/index.html' );
+	public function testShouldPutContentsWhenFileExists() {
+		$original = $this->filesystem->get_contents( 'public/baz/index.html' );
 		$content  = 'New contents';
-		$this->assertTrue( $this->filesystem->put_contents( 'cache/baz/index.html', $content ) );
-		$this->assertNotSame( $original, $this->filesystem->get_contents( 'cache/baz/index.html' ) );
-		$this->assertSame( $content, $this->filesystem->get_contents( 'cache/baz/index.html' ) );
+		$this->assertTrue( $this->filesystem->put_contents( 'public/baz/index.html', $content ) );
+		$this->assertNotSame( $original, $this->filesystem->get_contents( 'public/baz/index.html' ) );
+		$this->assertSame( $content, $this->filesystem->get_contents( 'public/baz/index.html' ) );
 
 		$original = $this->filesystem->get_contents( 'Tests/Unit/SomeClass/getFile.php' );
 		$content  = 'New contents';
@@ -22,10 +22,10 @@ class Test_PutContents extends TestCase {
 		$this->assertSame( $content, $this->filesystem->get_contents( 'Tests/Unit/SomeClass/getFile.php' ) );
 	}
 
-	function testShouldCreateFileAndPutContentsWhenFileDoesNotExist() {
+	public function testShouldCreateFileAndPutContentsWhenFileDoesNotExist() {
 		$data = [
 			'baz/newfile.html' => 'Lorem ipsum dolor sit amet',
-			'cache/Tests/Unit/SomeClass/putContents.php' => 'Praesent a nibh in nulla dapibus gravida.',
+			'public/Tests/Unit/SomeClass/putContents.php' => 'Praesent a nibh in nulla dapibus gravida.',
 		];
 		foreach( $data as $filename => $content ) {
 			$this->assertFalse( $this->filesystem->exists( $filename ) );
@@ -35,7 +35,7 @@ class Test_PutContents extends TestCase {
 		}
 
 		// Test with fopen() just to be sure.
-		$filename = 'cache/Tests/Unit/SomeClass/createNewFile.php';
+		$filename = 'public/Tests/Unit/SomeClass/createNewFile.php';
 		$this->assertFalse( $this->filesystem->exists( $filename ) );
 		$fp = @fopen( $this->filesystem->getUrl( $filename ), 'wb' );
 		if ( $fp ) {

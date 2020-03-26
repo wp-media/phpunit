@@ -5,21 +5,9 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
 use WPMedia\PHPUnit\Unit\VirtualFilesystemTestCase;
 
 abstract class TestCase extends VirtualFilesystemTestCase {
+	protected $path_to_test_data = 'structure.php';
 
-	protected $structure = [
-		'Tests' => [
-			'Integration'  => [],
-			'Unit'         => [
-				'bootstrap.php' => 'Donec turpis ante, aliquam vitae egestas ac, rhoncus ut quam.',
-				'SomeClass'     => [
-					'getFile.php' => '',
-				],
-			],
-			'includes'     => [],
-			'TestCase.php' => 'Maecenas eget erat ligula.',
-		],
-		'baz'   => [
-			'index.html' => 'Lorem ipsum dolor sit amet.',
-		],
-	];
+	public function getPathToFixturesDir() {
+		return WPMEDIA_PHPUNIT_ROOT_DIR . '/Tests/Fixtures/';
+	}
 }
