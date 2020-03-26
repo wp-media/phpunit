@@ -10,13 +10,6 @@ abstract class VirtualFilesystemTestCase extends TestCase {
 	use VirtualFilesystemTestTrait;
 
 	/**
-	 * Path to the Fixtures directory.
-	 *
-	 * @var string
-	 */
-	protected static $path_to_fixtures_dir;
-
-	/**
 	 * Path to the config and test data in the Fixtures directory.
 	 * Set this path in each test class.
 	 *

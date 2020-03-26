@@ -88,10 +88,16 @@ trait VirtualFilesystemTestTrait {
 	 * Loads the configuration for the vfs structure and test data.
 	 */
 	protected function loadConfig() {
-		$path         = ! empty( static::$path_to_fixtures_dir )
-			? static::$path_to_fixtures_dir . $this->path_to_test_data
-			: $this->path_to_test_data;
-		$this->config = require $path;
+		$this->config = require $this->getPathToFixturesDir() . $this->path_to_test_data;
+	}
+
+	/**
+	 * Overload in your test case with the path to the Fixtures directory.
+	 *
+	 * @return string
+	 */
+	public function getPathToFixturesDir() {
+		return '';
 	}
 
 	/**
