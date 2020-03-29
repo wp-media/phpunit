@@ -41,6 +41,11 @@ function get_wp_tests_dir() {
  * @param string $wp_tests_dir The directory path to the WordPress testing environment.
  */
 function bootstrap_integration_suite( $wp_tests_dir ) {
+	// Set MULTISITE constant when running the Multisite group of tests.
+	if ( BootstrapManager::isGroup( 'Multisite' ) && ! defined( 'MULTISITE' ) ) {
+		define( 'MULTISITE', true );
+	}
+
 	// Give access to tests_add_filter() function.
 	require_once $wp_tests_dir . '/includes/functions.php';
 
@@ -51,11 +56,6 @@ function bootstrap_integration_suite( $wp_tests_dir ) {
 			// This is necessary to set is_admin() for Rocket to load all the admin files.
 			if ( BootstrapManager::isGroup( 'AdminOnly' ) && ! defined( 'WP_ADMIN' ) ) {
 				define( 'WP_ADMIN', true );
-			}
-
-			// Set MULTISITE constant when running the Multisite group of tests.
-			if ( BootstrapManager::isGroup( 'Multisite' ) && ! defined( 'MULTISITE' ) ) {
-				define( 'MULTISITE', true );
 			}
 		},
 		9
