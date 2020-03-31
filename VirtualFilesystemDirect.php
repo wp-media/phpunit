@@ -495,6 +495,22 @@ class VirtualFilesystemDirect {
 	}
 
 	/**
+	 * Gets the file size (in bytes).
+	 *
+	 * @param string $file Path to file.
+	 *
+	 * @return int|false Size of the file in bytes on success; else false.
+	 */
+	public function size( $file ) {
+		$file = $this->getFile( $file );
+		if ( is_null( $file ) ) {
+			return false;
+		}
+
+		return $file->size();
+	}
+
+	/**
 	 * Sets the access and modification times of a file.
 	 *
 	 * Note: If $file doesn't exist, it will be created.
