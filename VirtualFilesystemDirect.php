@@ -376,6 +376,44 @@ class VirtualFilesystemDirect {
 	}
 
 	/**
+	 * Converts *nix-style file permissions to a octal number.
+	 *
+	 * Copied from WP_Filesystem_Direct
+	 *
+	 * @param string $mode string The *nix-style file permission.
+	 *
+	 * @return int octal representation.
+	 */
+	public function getnumchmodfromh( $mode ) {
+		$realmode = '';
+		$legal    = [ '', 'w', 'r', 'x', '-' ];
+		$attarray = preg_split( '//', $mode );
+
+		for ( $i = 0, $c = count( $attarray ); $i < $c; $i ++ ) {
+			$key = array_search( $attarray[ $i ], $legal );
+			if ( $key ) {
+				$realmode .= $legal[ $key ];
+			}
+		}
+
+		$mode  = str_pad( $realmode, 10, '-', STR_PAD_LEFT );
+		$trans = [
+			'-' => '0',
+			'r' => '4',
+			'w' => '2',
+			'x' => '1',
+		];
+		$mode  = strtr( $mode, $trans );
+
+		$newmode  = $mode[0];
+		$newmode .= $mode[1] + $mode[2] + $mode[3];
+		$newmode .= $mode[4] + $mode[5] + $mode[6];
+		$newmode .= $mode[7] + $mode[8] + $mode[9];
+
+		return $newmode;
+	}
+
+	/**
 	 * Gets a list of all the directories within the given virtual root directory.
 	 *
 	 * @param string $dir Virtual directory absolute path.
