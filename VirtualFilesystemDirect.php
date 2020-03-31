@@ -310,6 +310,25 @@ class VirtualFilesystemDirect {
 	}
 
 	/**
+	 * Gets the file's group.
+	 *
+	 * @param string $file Path to the file.
+	 *
+	 * @return string|false group's name on success; else, false.
+	 */
+	public function group( $file ) {
+		$file = $this->getFile( $file );
+		if ( is_null( $file ) ) {
+			return false;
+		}
+
+		$group_id   = $file->getGroup();
+		$group_info = posix_getgrgid( $group_id );
+
+		return $group_info['name'];
+	}
+
+	/**
 	 * Scans the filesystem and returns a list of files, directories, or both within the given virtual root directory.
 	 *
 	 * @param string  $dir       Virtual directory absolute path.
