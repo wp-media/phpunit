@@ -9,10 +9,10 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
 class Test_Size extends TestCase {
 
 	public function testShouldReturnFalseWhenFileDoesNotExist() {
-		$this->assertNull( $this->filesystem->getFile( 'doesnotexist.html' ) );
-		$this->assertNull( $this->filesystem->getFile( 'Tests/includes/index.php' ) );
-		$this->assertNull( $this->filesystem->getFile( 'baz/bar/index.php' ) );
-		$this->assertNull( $this->filesystem->getFile( 'public/Tests/includes/index.php' ) );
+		$this->assertFalse( $this->filesystem->size( 'doesnotexist.html' ) );
+		$this->assertFalse( $this->filesystem->size( 'Tests/includes/index.php' ) );
+		$this->assertFalse( $this->filesystem->size( 'baz/bar/index.php' ) );
+		$this->assertFalse( $this->filesystem->size( 'public/Tests/includes/index.php' ) );
 	}
 
 	public function testShouldReturnBytesWhenFileExists() {
