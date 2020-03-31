@@ -256,6 +256,84 @@ class VirtualFilesystemDirect {
 	}
 
 	/**
+	 * Gets details for files in a directory or a specific file.
+	 *
+	 * Copied from WP_Filesystem_Direct.
+	 *
+	 * @param string $path           Path to directory or file.
+	 * @param bool   $include_hidden Optional. Whether to include details of hidden ("." prefixed) files.
+	 *                               Default true.
+	 * @param bool   $recursive      Optional. Whether to recursively include file details in nested directories.
+	 *                               Default false.
+	 *
+	 * @return array|false Array of files. False if unable to list directory contents.
+	 */
+	public function dirlist( $path, $include_hidden = true, $recursive = false ) {
+		$path = $this->getUrl( $path );
+
+		if ( $this->is_file( $path ) ) {
+			$limit_file = basename( $path );
+			$path       = dirname( $path );
+		} else {
+			$limit_file = false;
+		}
+
+		if ( ! $this->is_dir( $path ) || ! $this->is_readable( $path ) ) {
+			return false;
+		}
+
+		$dir = dir( $path );
+		if ( ! $dir ) {
+			return false;
+		}
+
+		$listing = [];
+
+		while ( false !== ( $entry = $dir->read() ) ) {
+			$struc         = [
+				'name' => $entry,
+			];
+
+			if ( '.' === $struc['name'] || '..' === $struc['name'] ) {
+				continue;
+			}
+
+			if ( ! $include_hidden && '.' === $struc['name'][0] ) {
+				continue;
+			}
+
+			if ( $limit_file && $struc['name'] !== $limit_file ) {
+				continue;
+			}
+
+			$path                 = rtrim( $path, '\//' );
+			$pathentry            = "{$path}/{$entry}";
+			$struc['perms']       = $this->gethchmod( $pathentry );
+			$struc['permsn']      = $this->getnumchmodfromh( $struc['perms'] );
+			$struc['number']      = false;
+			$struc['owner']       = $this->owner( $pathentry );
+			$struc['group']       = $this->group( $pathentry );
+			$struc['size']        = $this->size( $pathentry );
+			$struc['lastmodunix'] = $this->mtime( $pathentry );
+			$struc['lastmod']     = gmdate( 'M j', $struc['lastmodunix'] );
+			$struc['time']        = gmdate( 'h:i:s', $struc['lastmodunix'] );
+			$struc['type']        = $this->is_dir( $pathentry ) ? 'd' : 'f';
+
+			if ( 'd' === $struc['type'] ) {
+				$struc['files'] = $recursive
+					? $this->dirlist( $path . '/' . $struc['name'], $include_hidden, $recursive )
+					: [];
+			}
+
+			$listing[ $struc['name'] ] = $struc;
+		}
+		$dir->close();
+		unset( $dir );
+
+		return $listing;
+	}
+
+	/**
 	 * Checks if a file or directory exists.
 	 *
 	 * @since 1.1
@@ -279,25 +357,21 @@ class VirtualFilesystemDirect {
 	/**
 	 * Gets the permissions of the specified file or filepath in their octal format.
 	 *
+	 * Copied from WP_Filesystem_Direct.
+	 *
 	 * @param string $file Path to the file.
 	 *
 	 * @return string Mode of the file (the last 3 digits).
 	 */
 	public function getchmod( $file ) {
-		$file        = $this->getFile( $file );
-		$permissions = ! is_null( $file )
-			? $file->getPermissions()
-			: 0;
-
-		return substr( decoct( $permissions ), - 3 );
+		$file = $this->getUrl( $file );
+		return substr( decoct( @fileperms( $file ) ), -3 );
 	}
 
 	/**
 	 * Returns the *nix-style file permissions for a file.
 	 *
-	 * From the PHP documentation page for fileperms().
-	 *
-	 * @link https://secure.php.net/manual/en/function.fileperms.php
+	 * Copied from WP_Filesystem_Direct.
 	 *
 	 * @return string The *nix-style representation of permissions.
 	 */
@@ -322,9 +396,26 @@ class VirtualFilesystemDirect {
 			$info = 'u';
 		}
 
-		foreach( ['owner', 'group', 'world'] as $type ) {
-			$info .= $this->getChmodInfo( $perms, $type );
-		}
+		// Owner.
+		$info .= ( ( $perms & 0x0100 ) ? 'r' : '-' );
+		$info .= ( ( $perms & 0x0080 ) ? 'w' : '-' );
+		$info .= ( ( $perms & 0x0040 )
+			? ( ( $perms & 0x0800 ) ? 's' : 'x' )
+			: ( ( $perms & 0x0800 ) ? 'S' : '-' ) );
+
+		// Group
+		$info .= ( ( $perms & 0x0020 ) ? 'r' : '-' );
+		$info .= ( ( $perms & 0x0010 ) ? 'w' : '-' );
+		$info .= ( ( $perms & 0x0008 )
+			? ( ( $perms & 0x0400 ) ? 's' : 'x' )
+			: ( ( $perms & 0x0400 ) ? 'S' : '-' ) );
+
+		// World
+		$info .= ( ( $perms & 0x0004 ) ? 'r' : '-' );
+		$info .= ( ( $perms & 0x0002 ) ? 'w' : '-' );
+		$info .= ( ( $perms & 0x0001 )
+			? ( ( $perms & 0x0200 ) ? 't' : 'x' )
+			: ( ( $perms & 0x0200 ) ? 'T' : '-' ) );
 
 		return $info;
 	}
@@ -333,7 +424,7 @@ class VirtualFilesystemDirect {
 	 * Get the chmod info for owner, group, or world.
 	 *
 	 * @param string $perms Intval of the file's permissions.
-	 * @param string $type 'owner', 'group', or 'world'
+	 * @param string $type  'owner', 'group', or 'world'
 	 *
 	 * @return string chmod info.
 	 */
@@ -366,11 +457,11 @@ class VirtualFilesystemDirect {
 			return '';
 		}
 
-		$info = ( $perms & $codes['r'] ) ? 'r' : '-';
-		$info .= ( $perms & $codes['w'] ) ? 'w' : '-';
-		$info .= ( $perms & $codes['sS'] )
-			? ( $perms & $codes['s'] ) ? 's' : 'x'
-			: ( $perms & $codes['S'] ) ? 'S' : '-';
+		$info  = ( ( $perms & $codes['r'] ) ? 'r' : '-' );
+		$info .= ( ( $perms & $codes['w'] ) ? 'w' : '-' );
+		$info .= ( ( $perms & $codes['sS'] )
+			? ( ( $perms & $codes['s'] ) ? 's' : 'x' )
+			: ( ( $perms & $codes['S'] ) ? 'S' : '-' ) );
 
 		return $info;
 	}
@@ -405,7 +496,7 @@ class VirtualFilesystemDirect {
 		];
 		$mode  = strtr( $mode, $trans );
 
-		$newmode  = $mode[0];
+		$newmode = $mode[0];
 		$newmode .= $mode[1] + $mode[2] + $mode[3];
 		$newmode .= $mode[4] + $mode[5] + $mode[6];
 		$newmode .= $mode[7] + $mode[8] + $mode[9];

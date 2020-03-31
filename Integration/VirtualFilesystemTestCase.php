@@ -46,4 +46,18 @@ abstract class VirtualFilesystemTestCase extends TestCase {
 
 		parent::setUp();
 	}
+
+	/**
+	 * Gets the default virtual directory filesystem structure.
+	 *
+	 * @return array default structure.
+	 */
+	public function getDefaultVfs() {
+		return [
+			'Tests' => [
+				'Integration' => [],
+				'Unit'        => [],
+			],
+		];
+	}
 }

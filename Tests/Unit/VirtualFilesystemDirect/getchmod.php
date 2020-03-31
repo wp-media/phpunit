@@ -14,20 +14,7 @@ class Test_Getchmod extends TestCase {
 	}
 
 	public function testShouldReturnModeWhenFileExists() {
-		$file = 'Tests/Unit/bootstrap.php';
-		$this->assertSame( $this->getExpected( $file ), $this->filesystem->getchmod( $file ) );
-		$file = 'Tests/Unit/SomeClass/getFile.php';
-		$this->assertSame( $this->getExpected( $file ), $this->filesystem->getchmod( $file ) );
-	}
-
-	private function getExpected( $file ) {
-		return $this->getchmod( $this->filesystem->getUrl( $file ) );
-	}
-
-	/**
-	 * Copied directly from WP_Filesystem_Direct.
-	 */
-	private function getchmod( $file ) {
-		return substr( decoct( @fileperms( $file ) ), -3 );
+		$this->assertSame( '666', $this->filesystem->getchmod( 'Tests/Unit/bootstrap.php' ) );
+		$this->assertSame( '666', $this->filesystem->getchmod( 'Tests/Unit/SomeClass/getFile.php' ) );
 	}
 }
