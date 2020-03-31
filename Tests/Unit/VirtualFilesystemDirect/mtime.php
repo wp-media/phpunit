@@ -3,7 +3,7 @@
 namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
 
 /**
- * @covers WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect::getFile
+ * @covers WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect::mtime
  * @group  VirtualFilesystemDirect
  */
 class Test_Mtime extends TestCase {

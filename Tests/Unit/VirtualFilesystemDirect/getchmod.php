@@ -3,7 +3,7 @@
 namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
 
 /**
- * @covers WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect::chmod
+ * @covers WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect::getchmod
  * @group  VirtualFilesystemDirect
  */
 class Test_Getchmod extends TestCase {

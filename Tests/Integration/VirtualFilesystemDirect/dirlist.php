@@ -3,7 +3,7 @@
 namespace WPMedia\PHPUnit\Tests\Integration\VirtualFilesystemDirect;
 
 /**
- * @covers WPMedia\PHPUnit\Tests\Integration\VirtualFilesystemDirect::getDir
+ * @covers WPMedia\PHPUnit\Tests\Integration\VirtualFilesystemDirect::dirlist
  * @group  VirtualFilesystemDirect
  */
 class Test_DirList extends TestCase {
