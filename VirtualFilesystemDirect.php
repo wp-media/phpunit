@@ -437,6 +437,25 @@ class VirtualFilesystemDirect {
 	}
 
 	/**
+	 * Gets the file owner's username.
+	 *
+	 * @param string $file Path to the file.
+	 *
+	 * @return string|false Owner's username on success; else, false.
+	 */
+	public function owner( $file ) {
+		$file = $this->getFile( $file );
+		if ( is_null( $file ) ) {
+			return false;
+		}
+
+		$owner_id   = $file->getUser();
+		$owner_info = posix_getpwuid( $owner_id );
+
+		return $owner_info['name'];
+	}
+
+	/**
 	 * Deletes a directory.
 	 *
 	 * @since 1.1

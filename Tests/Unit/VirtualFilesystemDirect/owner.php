@@ -6,7 +6,7 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect;
  * @covers WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemDirect::getFile
  * @group  VirtualFilesystemDirect
  */
-class Test_Group extends TestCase {
+class Test_Owner extends TestCase {
 
 	public function testShouldReturnFalseWhenFileDoesNotExist() {
 		$this->assertNull( $this->filesystem->getFile( 'doesnotexist.html' ) );
@@ -15,16 +15,16 @@ class Test_Group extends TestCase {
 		$this->assertNull( $this->filesystem->getFile( 'public/Tests/includes/index.php' ) );
 	}
 
-	public function testShouldReturnGroupNameWhenFileExists() {
+	public function testShouldReturnOwnerUsernameWhenFileExists() {
 		$file = 'Tests/Unit/bootstrap.php';
-		$this->assertSame( $this->getExpected( $file ), $this->filesystem->group( $file ) );
+		$this->assertSame( $this->getExpected( $file ), $this->filesystem->owner( $file ) );
 		$file = 'Tests/Unit/SomeClass/getFile.php';
-		$this->assertSame( $this->getExpected( $file ), $this->filesystem->group( $file ) );
+		$this->assertSame( $this->getExpected( $file ), $this->filesystem->owner( $file ) );
 	}
 
 	private function getExpected( $file ) {
-		$id   = filegroup( $this->filesystem->getUrl( $file ) );
-		$info = posix_getgrgid( $id );
+		$id   = fileowner( $this->filesystem->getUrl( $file ) );
+		$info = posix_getpwuid( $id );
 
 		return $info['name'];
 	}
