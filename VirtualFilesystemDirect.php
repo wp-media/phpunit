@@ -437,6 +437,22 @@ class VirtualFilesystemDirect {
 	}
 
 	/**
+	 * Gets the file's last access time.
+	 *
+	 * @param string $file Path to file.
+	 *
+	 * @return int|false Unix timestamp representing last access time; else, false.
+	 */
+	public function atime( $file ) {
+		$file = $this->getFile( $file );
+		if ( is_null( $file ) ) {
+			return false;
+		}
+
+		return $file->fileatime();
+	}
+
+	/**
 	 * Gets the file modification time.
 	 *
 	 * @param string $file Path to file.
