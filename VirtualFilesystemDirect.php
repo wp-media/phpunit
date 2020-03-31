@@ -284,12 +284,95 @@ class VirtualFilesystemDirect {
 	 * @return string Mode of the file (the last 3 digits).
 	 */
 	public function getchmod( $file ) {
-		$file = $this->getFile( $file );
+		$file        = $this->getFile( $file );
 		$permissions = ! is_null( $file )
 			? $file->getPermissions()
 			: 0;
 
-		return substr( decoct( $permissions ), -3 );
+		return substr( decoct( $permissions ), - 3 );
+	}
+
+	/**
+	 * Returns the *nix-style file permissions for a file.
+	 *
+	 * From the PHP documentation page for fileperms().
+	 *
+	 * @link https://secure.php.net/manual/en/function.fileperms.php
+	 *
+	 * @return string The *nix-style representation of permissions.
+	 */
+	public function gethchmod( $file ) {
+		$perms = intval( $this->getchmod( $file ), 8 );
+
+		if ( ( $perms & 0xC000 ) === 0xC000 ) { // Socket
+			$info = 's';
+		} elseif ( ( $perms & 0xA000 ) === 0xA000 ) { // Symbolic Link
+			$info = 'l';
+		} elseif ( ( $perms & 0x8000 ) === 0x8000 ) { // Regular
+			$info = '-';
+		} elseif ( ( $perms & 0x6000 ) === 0x6000 ) { // Block special
+			$info = 'b';
+		} elseif ( ( $perms & 0x4000 ) === 0x4000 ) { // Directory
+			$info = 'd';
+		} elseif ( ( $perms & 0x2000 ) === 0x2000 ) { // Character special
+			$info = 'c';
+		} elseif ( ( $perms & 0x1000 ) === 0x1000 ) { // FIFO pipe
+			$info = 'p';
+		} else { // Unknown
+			$info = 'u';
+		}
+
+		foreach( ['owner', 'group', 'world'] as $type ) {
+			$info .= $this->getChmodInfo( $perms, $type );
+		}
+
+		return $info;
+	}
+
+	/**
+	 * Get the chmod info for owner, group, or world.
+	 *
+	 * @param string $perms Intval of the file's permissions.
+	 * @param string $type 'owner', 'group', or 'world'
+	 *
+	 * @return string chmod info.
+	 */
+	private function getChmodInfo( $perms, $type ) {
+		if ( 'owner' === $type ) {
+			$codes = [
+				'r'  => 0x0100,
+				'w'  => 0x0080,
+				'sS' => 0x0040,
+				's'  => 0x0800,
+				'S'  => 0x0800,
+			];
+		} elseif ( 'group' === $type ) {
+			$codes = [
+				'r'  => 0x0020,
+				'w'  => 0x0010,
+				'sS' => 0x0008,
+				's'  => 0x0400,
+				'S'  => 0x0400,
+			];
+		} elseif ( 'world' === $type ) {
+			$codes = [
+				'r'  => 0x0020,
+				'w'  => 0x0010,
+				'sS' => 0x0008,
+				's'  => 0x0400,
+				'S'  => 0x0400,
+			];
+		} else {
+			return '';
+		}
+
+		$info = ( $perms & $codes['r'] ) ? 'r' : '-';
+		$info .= ( $perms & $codes['w'] ) ? 'w' : '-';
+		$info .= ( $perms & $codes['sS'] )
+			? ( $perms & $codes['s'] ) ? 's' : 'x'
+			: ( $perms & $codes['S'] ) ? 'S' : '-';
+
+		return $info;
 	}
 
 	/**

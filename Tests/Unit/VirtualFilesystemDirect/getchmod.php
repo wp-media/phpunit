@@ -21,6 +21,13 @@ class Test_Getchmod extends TestCase {
 	}
 
 	private function getExpected( $file ) {
-		return substr( decoct( @fileperms( $this->filesystem->getUrl( $file ) ) ), -3 );
+		return $this->getchmod( $this->filesystem->getUrl( $file ) );
+	}
+
+	/**
+	 * Copied directly from WP_Filesystem_Direct.
+	 */
+	private function getchmod( $file ) {
+		return substr( decoct( @fileperms( $file ) ), -3 );
 	}
 }
