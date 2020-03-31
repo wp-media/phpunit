@@ -256,6 +256,84 @@ class VirtualFilesystemDirect {
 	}
 
 	/**
+	 * Gets details for files in a directory or a specific file.
+	 *
+	 * Copied from WP_Filesystem_Direct.
+	 *
+	 * @param string $path           Path to directory or file.
+	 * @param bool   $include_hidden Optional. Whether to include details of hidden ("." prefixed) files.
+	 *                               Default true.
+	 * @param bool   $recursive      Optional. Whether to recursively include file details in nested directories.
+	 *                               Default false.
+	 *
+	 * @return array|false Array of files. False if unable to list directory contents.
+	 */
+	public function dirlist( $path, $include_hidden = true, $recursive = false ) {
+		$path = $this->getUrl( $path );
+
+		if ( $this->is_file( $path ) ) {
+			$limit_file = basename( $path );
+			$path       = dirname( $path );
+		} else {
+			$limit_file = false;
+		}
+
+		if ( ! $this->is_dir( $path ) || ! $this->is_readable( $path ) ) {
+			return false;
+		}
+
+		$dir = dir( $path );
+		if ( ! $dir ) {
+			return false;
+		}
+
+		$listing = [];
+
+		while ( false !== ( $entry = $dir->read() ) ) {
+			$struc         = [
+				'name' => $entry,
+			];
+
+			if ( '.' === $struc['name'] || '..' === $struc['name'] ) {
+				continue;
+			}
+
+			if ( ! $include_hidden && '.' === $struc['name'][0] ) {
+				continue;
+			}
+
+			if ( $limit_file && $struc['name'] !== $limit_file ) {
+				continue;
+			}
+
+			$path                 = rtrim( $path, '\//' );
+			$pathentry            = "{$path}/{$entry}";
+			$struc['perms']       = $this->gethchmod( $pathentry );
+			$struc['permsn']      = $this->getnumchmodfromh( $struc['perms'] );
+			$struc['number']      = false;
+			$struc['owner']       = $this->owner( $pathentry );
+			$struc['group']       = $this->group( $pathentry );
+			$struc['size']        = $this->size( $pathentry );
+			$struc['lastmodunix'] = $this->mtime( $pathentry );
+			$struc['lastmod']     = gmdate( 'M j', $struc['lastmodunix'] );
+			$struc['time']        = gmdate( 'h:i:s', $struc['lastmodunix'] );
+			$struc['type']        = $this->is_dir( $pathentry ) ? 'd' : 'f';
+
+			if ( 'd' === $struc['type'] ) {
+				$struc['files'] = $recursive
+					? $this->dirlist( $path . '/' . $struc['name'], $include_hidden, $recursive )
+					: [];
+			}
+
+			$listing[ $struc['name'] ] = $struc;
+		}
+		$dir->close();
+		unset( $dir );
+
+		return $listing;
+	}
+
+	/**
 	 * Checks if a file or directory exists.
 	 *
 	 * @since 1.1
@@ -274,6 +352,110 @@ class VirtualFilesystemDirect {
 			||
 			$this->is_file( $fileOrDir )
 		);
+	}
+
+	/**
+	 * Gets the permissions of the specified file or filepath in their octal format.
+	 *
+	 * Copied from WP_Filesystem_Direct.
+	 *
+	 * @param string $file Path to the file.
+	 *
+	 * @return string Mode of the file (the last 3 digits).
+	 */
+	public function getchmod( $file ) {
+		$file = $this->getUrl( $file );
+		return substr( decoct( @fileperms( $file ) ), -3 );
+	}
+
+	/**
+	 * Returns the *nix-style file permissions for a file.
+	 *
+	 * Copied from WP_Filesystem_Direct.
+	 *
+	 * @return string The *nix-style representation of permissions.
+	 */
+	public function gethchmod( $file ) {
+		$perms = intval( $this->getchmod( $file ), 8 );
+
+		if ( ( $perms & 0xC000 ) === 0xC000 ) { // Socket
+			$info = 's';
+		} elseif ( ( $perms & 0xA000 ) === 0xA000 ) { // Symbolic Link
+			$info = 'l';
+		} elseif ( ( $perms & 0x8000 ) === 0x8000 ) { // Regular
+			$info = '-';
+		} elseif ( ( $perms & 0x6000 ) === 0x6000 ) { // Block special
+			$info = 'b';
+		} elseif ( ( $perms & 0x4000 ) === 0x4000 ) { // Directory
+			$info = 'd';
+		} elseif ( ( $perms & 0x2000 ) === 0x2000 ) { // Character special
+			$info = 'c';
+		} elseif ( ( $perms & 0x1000 ) === 0x1000 ) { // FIFO pipe
+			$info = 'p';
+		} else { // Unknown
+			$info = 'u';
+		}
+
+		// Owner.
+		$info .= ( ( $perms & 0x0100 ) ? 'r' : '-' );
+		$info .= ( ( $perms & 0x0080 ) ? 'w' : '-' );
+		$info .= ( ( $perms & 0x0040 )
+			? ( ( $perms & 0x0800 ) ? 's' : 'x' )
+			: ( ( $perms & 0x0800 ) ? 'S' : '-' ) );
+
+		// Group
+		$info .= ( ( $perms & 0x0020 ) ? 'r' : '-' );
+		$info .= ( ( $perms & 0x0010 ) ? 'w' : '-' );
+		$info .= ( ( $perms & 0x0008 )
+			? ( ( $perms & 0x0400 ) ? 's' : 'x' )
+			: ( ( $perms & 0x0400 ) ? 'S' : '-' ) );
+
+		// World
+		$info .= ( ( $perms & 0x0004 ) ? 'r' : '-' );
+		$info .= ( ( $perms & 0x0002 ) ? 'w' : '-' );
+		$info .= ( ( $perms & 0x0001 )
+			? ( ( $perms & 0x0200 ) ? 't' : 'x' )
+			: ( ( $perms & 0x0200 ) ? 'T' : '-' ) );
+
+		return $info;
+	}
+
+	/**
+	 * Converts *nix-style file permissions to a octal number.
+	 *
+	 * Copied from WP_Filesystem_Direct
+	 *
+	 * @param string $mode string The *nix-style file permission.
+	 *
+	 * @return int octal representation.
+	 */
+	public function getnumchmodfromh( $mode ) {
+		$realmode = '';
+		$legal    = [ '', 'w', 'r', 'x', '-' ];
+		$attarray = preg_split( '//', $mode );
+
+		for ( $i = 0, $c = count( $attarray ); $i < $c; $i ++ ) {
+			$key = array_search( $attarray[ $i ], $legal );
+			if ( $key ) {
+				$realmode .= $legal[ $key ];
+			}
+		}
+
+		$mode  = str_pad( $realmode, 10, '-', STR_PAD_LEFT );
+		$trans = [
+			'-' => '0',
+			'r' => '4',
+			'w' => '2',
+			'x' => '1',
+		];
+		$mode  = strtr( $mode, $trans );
+
+		$newmode = $mode[0];
+		$newmode .= $mode[1] + $mode[2] + $mode[3];
+		$newmode .= $mode[4] + $mode[5] + $mode[6];
+		$newmode .= $mode[7] + $mode[8] + $mode[9];
+
+		return $newmode;
 	}
 
 	/**
@@ -307,6 +489,25 @@ class VirtualFilesystemDirect {
 	 */
 	public function getListing( $dir ) {
 		return $this->scanFS( $dir );
+	}
+
+	/**
+	 * Gets the file's group.
+	 *
+	 * @param string $file Path to the file.
+	 *
+	 * @return string|false group's name on success; else, false.
+	 */
+	public function group( $file ) {
+		$file = $this->getFile( $file );
+		if ( is_null( $file ) ) {
+			return false;
+		}
+
+		$group_id   = $file->getGroup();
+		$group_info = posix_getgrgid( $group_id );
+
+		return $group_info['name'];
 	}
 
 	/**
@@ -418,6 +619,57 @@ class VirtualFilesystemDirect {
 	}
 
 	/**
+	 * Gets the file's last access time.
+	 *
+	 * @param string $file Path to file.
+	 *
+	 * @return int|false Unix timestamp representing last access time; else, false.
+	 */
+	public function atime( $file ) {
+		$file = $this->getFile( $file );
+		if ( is_null( $file ) ) {
+			return false;
+		}
+
+		return $file->fileatime();
+	}
+
+	/**
+	 * Gets the file modification time.
+	 *
+	 * @param string $file Path to file.
+	 *
+	 * @return int|false Unix timestamp representing modification time, false on failure.
+	 */
+	public function mtime( $file ) {
+		$file = $this->getFile( $file );
+		if ( is_null( $file ) ) {
+			return false;
+		}
+
+		return $file->filemtime();
+	}
+
+	/**
+	 * Gets the file owner's username.
+	 *
+	 * @param string $file Path to the file.
+	 *
+	 * @return string|false Owner's username on success; else, false.
+	 */
+	public function owner( $file ) {
+		$file = $this->getFile( $file );
+		if ( is_null( $file ) ) {
+			return false;
+		}
+
+		$owner_id   = $file->getUser();
+		$owner_info = posix_getpwuid( $owner_id );
+
+		return $owner_info['name'];
+	}
+
+	/**
 	 * Deletes a directory.
 	 *
 	 * @since 1.1
@@ -454,6 +706,22 @@ class VirtualFilesystemDirect {
 		$parent  = $this->getParentDir( $dirname, $child );
 
 		return $parent->removeChild( $dirname );
+	}
+
+	/**
+	 * Gets the file size (in bytes).
+	 *
+	 * @param string $file Path to file.
+	 *
+	 * @return int|false Size of the file in bytes on success; else false.
+	 */
+	public function size( $file ) {
+		$file = $this->getFile( $file );
+		if ( is_null( $file ) ) {
+			return false;
+		}
+
+		return $file->size();
 	}
 
 	/**
