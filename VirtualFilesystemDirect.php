@@ -277,6 +277,22 @@ class VirtualFilesystemDirect {
 	}
 
 	/**
+	 * Gets the permissions of the specified file or filepath in their octal format.
+	 *
+	 * @param string $file Path to the file.
+	 *
+	 * @return string Mode of the file (the last 3 digits).
+	 */
+	public function getchmod( $file ) {
+		$file = $this->getFile( $file );
+		$permissions = ! is_null( $file )
+			? $file->getPermissions()
+			: 0;
+
+		return substr( decoct( $permissions ), -3 );
+	}
+
+	/**
 	 * Gets a list of all the directories within the given virtual root directory.
 	 *
 	 * @param string $dir Virtual directory absolute path.
