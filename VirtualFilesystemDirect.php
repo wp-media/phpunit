@@ -421,52 +421,6 @@ class VirtualFilesystemDirect {
 	}
 
 	/**
-	 * Get the chmod info for owner, group, or world.
-	 *
-	 * @param string $perms Intval of the file's permissions.
-	 * @param string $type  'owner', 'group', or 'world'
-	 *
-	 * @return string chmod info.
-	 */
-	private function getChmodInfo( $perms, $type ) {
-		if ( 'owner' === $type ) {
-			$codes = [
-				'r'  => 0x0100,
-				'w'  => 0x0080,
-				'sS' => 0x0040,
-				's'  => 0x0800,
-				'S'  => 0x0800,
-			];
-		} elseif ( 'group' === $type ) {
-			$codes = [
-				'r'  => 0x0020,
-				'w'  => 0x0010,
-				'sS' => 0x0008,
-				's'  => 0x0400,
-				'S'  => 0x0400,
-			];
-		} elseif ( 'world' === $type ) {
-			$codes = [
-				'r'  => 0x0020,
-				'w'  => 0x0010,
-				'sS' => 0x0008,
-				's'  => 0x0400,
-				'S'  => 0x0400,
-			];
-		} else {
-			return '';
-		}
-
-		$info  = ( ( $perms & $codes['r'] ) ? 'r' : '-' );
-		$info .= ( ( $perms & $codes['w'] ) ? 'w' : '-' );
-		$info .= ( ( $perms & $codes['sS'] )
-			? ( ( $perms & $codes['s'] ) ? 's' : 'x' )
-			: ( ( $perms & $codes['S'] ) ? 'S' : '-' ) );
-
-		return $info;
-	}
-
-	/**
 	 * Converts *nix-style file permissions to a octal number.
 	 *
 	 * Copied from WP_Filesystem_Direct
