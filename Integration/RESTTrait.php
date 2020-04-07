@@ -28,24 +28,24 @@ trait RESTTrait {
 	}
 
 	/**
-	 * Does the REST DELETE.
+	 * Does the REST DELETE request.
 	 *
 	 * @param string $route       Requested route.
 	 * @param array  $body_params Optional. Body parameters.
 	 *
-	 * @return WP_REST_Response REST response.
+	 * @return mixed Response data.
 	 */
 	protected function doRestDelete( $route, array $body_params = [] ) {
 		return $this->doRestRequest( 'DELETE', $route, $body_params );
 	}
 
 	/**
-	 * Does the REST PUT.
+	 * Does the REST PUT request.
 	 *
 	 * @param string $route       Requested route.
 	 * @param array  $body_params Optional. Body parameters.
 	 *
-	 * @return WP_REST_Response REST response.
+	 * @return mixed Response data.
 	 */
 	protected function doRestPut( $route, array $body_params = [] ) {
 		return $this->doRestRequest( 'PUT', $route, $body_params );
@@ -61,7 +61,7 @@ trait RESTTrait {
 	 * @param string $route       Requested route.
 	 * @param array  $body_params Optional. Body parameters.
 	 *
-	 * @return WP_REST_Response REST response.
+	 * @return mixed Response data.
 	 */
 	protected function doRestRequest( $method, $route, array $body_params = [] ) {
 		$request = new WP_Rest_Request( $method, $route );
