@@ -28,19 +28,48 @@ trait RESTTrait {
 	}
 
 	/**
-	 * Does the REST request.
+	 * Does the REST DELETE.
 	 *
-	 * @since 1.0.0
-	 *
-	 * @param array  $body_params Body parameters.
 	 * @param string $route       Requested route.
+	 * @param array  $body_params Optional. Body parameters.
 	 *
 	 * @return WP_REST_Response REST response.
 	 */
-	protected function doRestRequest( array $body_params, $route ) {
-		$request = new WP_Rest_Request( 'PUT', $route );
+	protected function doRestDelete( $route, array $body_params = [] ) {
+		return $this->doRestRequest( 'DELETE', $route, $body_params );
+	}
+
+	/**
+	 * Does the REST PUT.
+	 *
+	 * @param string $route       Requested route.
+	 * @param array  $body_params Optional. Body parameters.
+	 *
+	 * @return WP_REST_Response REST response.
+	 */
+	protected function doRestPut( $route, array $body_params = [] ) {
+		return $this->doRestRequest( 'PUT', $route, $body_params );
+	}
+
+	/**
+	 * Does the REST request.
+	 *
+	 * @since 1.1.6 Adds REST method and changes the order.
+	 * @since 1.0.0
+	 *
+	 * @param string $method      REST method.
+	 * @param string $route       Requested route.
+	 * @param array  $body_params Optional. Body parameters.
+	 *
+	 * @return WP_REST_Response REST response.
+	 */
+	protected function doRestRequest( $method, $route, array $body_params = [] ) {
+		$request = new WP_Rest_Request( $method, $route );
 		$request->set_header( 'Content-Type', 'application/x-www-form-urlencoded' );
-		$request->set_body_params( $body_params );
+
+		if ( ! empty( $body_params ) ) {
+			$request->set_body_params( $body_params );
+		}
 
 		return rest_do_request( $request )->get_data();
 	}
