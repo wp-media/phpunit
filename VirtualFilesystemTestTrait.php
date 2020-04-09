@@ -63,9 +63,21 @@ trait VirtualFilesystemTestTrait {
 	public function init() {
 		if ( empty( $this->config ) ) {
 			$this->loadConfig();
+
+			if ( ! isset( $this->config['vfs_dir'] ) || false === $this->config['vfs_dir'] ) {
+				$this->config['vfs_dir'] = '';
+			} elseif ( '' !== $this->config['vfs_dir'] ) {
+				$this->config['vfs_dir'] = rtrim( $this->config['vfs_dir'], '\//' ) . '/';
+			}
 		}
 
-		$vfs                  = ArrayTrait::get( $this->config['structure'], rtrim( $this->config['vfs_dir'], '\//' ), [], '/' );
+		if ( '' === $this->config['vfs_dir'] ) {
+			$vfs = null;
+		} else {
+			$vfs = trim( $this->config['vfs_dir'], '/' );
+		}
+
+		$vfs                  = ArrayTrait::get( $this->config['structure'], $vfs, [], '/' );
 		$this->original_files = array_keys( ArrayTrait::flatten( $vfs, $this->config['vfs_dir'] ) );
 		$this->original_dirs  = array_keys( ArrayTrait::flatten( $vfs, $this->config['vfs_dir'], true ) );
 
