@@ -42,6 +42,13 @@ trait VirtualFilesystemTestTrait {
 	private $merged_structure = [];
 
 	/**
+	 * Overwrite in the test class to skip running the "initOriginals()" method.
+	 *
+	 * @var bool
+	 */
+	protected $skip_initOriginals = false;
+
+	/**
 	 * Original virtual files with flattened full paths.
 	 *
 	 * @var array
@@ -85,7 +92,6 @@ trait VirtualFilesystemTestTrait {
 	protected function loadConfig() {
 		$this->config = array_merge(
 			[
-				'skip_initOriginals' => false,
 				'vfs_dir'            => '',
 				'structure'          => [],
 				'test_data'          => [],
@@ -148,7 +154,7 @@ trait VirtualFilesystemTestTrait {
 	 */
 	protected function initOriginals() {
 		// Bail out when "skip_initOriginals" is set to true.
-		if ( $this->config['skip_initOriginals'] ) {
+		if ( $this->skip_initOriginals ) {
 			return;
 		}
 
