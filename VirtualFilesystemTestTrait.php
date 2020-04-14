@@ -141,6 +141,11 @@ trait VirtualFilesystemTestTrait {
 	 * Initializes the original files and directories properties for use in the tests.
 	 */
 	protected function initOriginals() {
+		// Bail out when "skip_initOriginals" is set to true.
+		if ( $this->config['skip_initOriginals'] ) {
+			return;
+		}
+
 		if ( ! empty( $this->config['vfs_dir'] ) ) {
 			$vfs_dir   = $this->config['vfs_dir'];
 			$structure = ArrayTrait::get( $this->config['structure'], $vfs_dir, [], '/' );
