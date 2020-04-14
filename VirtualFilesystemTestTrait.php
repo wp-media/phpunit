@@ -63,21 +63,8 @@ trait VirtualFilesystemTestTrait {
 	public function init() {
 		if ( empty( $this->config ) ) {
 			$this->loadConfig();
-
-			if ( ! isset( $this->config['vfs_dir'] ) || false === $this->config['vfs_dir'] ) {
-				$this->config['vfs_dir'] = '';
-			}
 		}
-
-		if ( '' === $this->config['vfs_dir'] ) {
-			$vfs = null;
-		} else {
-			$vfs = trim( $this->config['vfs_dir'], '/' );
-		}
-
-		$vfs                  = ArrayTrait::get( $this->config['structure'], $vfs, [], '/' );
-		$this->original_files = array_keys( ArrayTrait::flatten( $vfs, $this->config['vfs_dir'] ) );
-		$this->original_dirs  = array_keys( ArrayTrait::flatten( $vfs, $this->config['vfs_dir'], true ) );
+		$this->initOriginals();
 
 		$this->filesystem     = new VirtualFilesystemDirect( $this->rootVirtualDir, $this->mergeStructure(), $this->permissions );
 		$this->rootVirtualUrl = $this->filesystem->getUrl( '/' );
@@ -148,5 +135,21 @@ trait VirtualFilesystemTestTrait {
 			'wp-includes'   => [],
 			'wp-config.php' => '',
 		];
+	}
+
+	/**
+	 * Initializes the original files and directories properties for use in the tests.
+	 */
+	protected function initOriginals() {
+		if ( ! empty( $this->config['vfs_dir'] ) ) {
+			$vfs_dir   = $this->config['vfs_dir'];
+			$structure = ArrayTrait::get( $this->config['structure'], $vfs_dir, [], '/' );
+		} else {
+			$vfs_dir   = '';
+			$structure = $this->config['structure'];
+		}
+
+		$this->original_files = array_keys( ArrayTrait::flatten( $structure, $vfs_dir ) );
+		$this->original_dirs  = array_keys( ArrayTrait::flatten( $structure, $vfs_dir, true ) );
 	}
 }
