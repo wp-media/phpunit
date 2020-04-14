@@ -2,8 +2,6 @@
 
 namespace WPMedia\PHPUnit;
 
-use Brains\Monkey\Functions;
-
 trait VirtualFilesystemTestTrait {
 
 	use ArrayTrait;
