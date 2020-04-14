@@ -160,7 +160,7 @@ trait VirtualFilesystemTestTrait {
 
 		if ( ! empty( $this->config['vfs_dir'] ) ) {
 			$vfs_dir   = $this->config['vfs_dir'];
-			$structure = ArrayTrait::get( $this->config['structure'], $vfs_dir, [], '/' );
+			$structure = ArrayTrait::get( $this->config['structure'], rtrim( $vfs_dir, '/\\' ), [], '/' );
 		} else {
 			$vfs_dir   = '';
 			$structure = $this->config['structure'];
