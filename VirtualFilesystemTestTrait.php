@@ -66,8 +66,6 @@ trait VirtualFilesystemTestTrait {
 
 			if ( ! isset( $this->config['vfs_dir'] ) || false === $this->config['vfs_dir'] ) {
 				$this->config['vfs_dir'] = '';
-			} elseif ( '' !== $this->config['vfs_dir'] ) {
-				$this->config['vfs_dir'] = rtrim( $this->config['vfs_dir'], '\//' ) . '/';
 			}
 		}
 
