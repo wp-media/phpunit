@@ -85,7 +85,15 @@ trait VirtualFilesystemTestTrait {
 	 * Loads the configuration for the vfs structure and test data.
 	 */
 	protected function loadConfig() {
-		$this->config = require $this->getPathToFixturesDir() . $this->path_to_test_data;
+		$this->config = array_merge(
+			[
+				'skip_initOriginals' => false,
+				'vfs_dir'            => '',
+				'structure'          => [],
+				'test_data'          => [],
+			],
+			require $this->getPathToFixturesDir() . $this->path_to_test_data
+		);
 	}
 
 	/**
