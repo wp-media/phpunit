@@ -92,9 +92,9 @@ trait VirtualFilesystemTestTrait {
 	protected function loadConfig() {
 		$this->config = array_merge(
 			[
-				'vfs_dir'            => '',
-				'structure'          => [],
-				'test_data'          => [],
+				'vfs_dir'   => '',
+				'structure' => [],
+				'test_data' => [],
 			],
 			require $this->getPathToFixturesDir() . $this->path_to_test_data
 		);
@@ -158,9 +158,10 @@ trait VirtualFilesystemTestTrait {
 			return;
 		}
 
-		if ( ! empty( $this->config['vfs_dir'] ) ) {
-			$vfs_dir   = $this->config['vfs_dir'];
-			$structure = ArrayTrait::get( $this->config['structure'], rtrim( $vfs_dir, '/\\' ), [], '/' );
+		if ( ! empty( $this->config['vfs_dir'] ) && '/' !== $this->config['vfs_dir'] ) {
+			$vfs_dir    = rtrim( $this->config['vfs_dir'], '/\\' ); // Remove trailing slash for the get.
+			$structure  = ArrayTrait::get( $this->config['structure'], $vfs_dir, [], '/' );
+			$vfs_dir   .= '/'; // Add the trailing slash for the flattening.
 		} else {
 			$vfs_dir   = '';
 			$structure = $this->config['structure'];
