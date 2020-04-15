@@ -2,8 +2,6 @@
 
 namespace WPMedia\PHPUnit;
 
-use Brains\Monkey\Functions;
-
 trait VirtualFilesystemTestTrait {
 
 	use ArrayTrait;
@@ -44,6 +42,13 @@ trait VirtualFilesystemTestTrait {
 	private $merged_structure = [];
 
 	/**
+	 * Overwrite in the test class to skip running the "initOriginals()" method.
+	 *
+	 * @var bool
+	 */
+	protected $skip_initOriginals = false;
+
+	/**
 	 * Original virtual files with flattened full paths.
 	 *
 	 * @var array
@@ -64,10 +69,7 @@ trait VirtualFilesystemTestTrait {
 		if ( empty( $this->config ) ) {
 			$this->loadConfig();
 		}
-
-		$vfs                  = ArrayTrait::get( $this->config['structure'], rtrim( $this->config['vfs_dir'], '\//' ), [], '/' );
-		$this->original_files = array_keys( ArrayTrait::flatten( $vfs, $this->config['vfs_dir'] ) );
-		$this->original_dirs  = array_keys( ArrayTrait::flatten( $vfs, $this->config['vfs_dir'], true ) );
+		$this->initOriginals();
 
 		$this->filesystem     = new VirtualFilesystemDirect( $this->rootVirtualDir, $this->mergeStructure(), $this->permissions );
 		$this->rootVirtualUrl = $this->filesystem->getUrl( '/' );
@@ -88,7 +90,14 @@ trait VirtualFilesystemTestTrait {
 	 * Loads the configuration for the vfs structure and test data.
 	 */
 	protected function loadConfig() {
-		$this->config = require $this->getPathToFixturesDir() . $this->path_to_test_data;
+		$this->config = array_merge(
+			[
+				'vfs_dir'   => '',
+				'structure' => [],
+				'test_data' => [],
+			],
+			require $this->getPathToFixturesDir() . $this->path_to_test_data
+		);
 	}
 
 	/**
@@ -138,5 +147,27 @@ trait VirtualFilesystemTestTrait {
 			'wp-includes'   => [],
 			'wp-config.php' => '',
 		];
+	}
+
+	/**
+	 * Initializes the original files and directories properties for use in the tests.
+	 */
+	protected function initOriginals() {
+		// Bail out when "skip_initOriginals" is set to true.
+		if ( $this->skip_initOriginals ) {
+			return;
+		}
+
+		if ( ! empty( $this->config['vfs_dir'] ) && '/' !== $this->config['vfs_dir'] ) {
+			$vfs_dir    = rtrim( $this->config['vfs_dir'], '/\\' ); // Remove trailing slash for the get.
+			$structure  = ArrayTrait::get( $this->config['structure'], $vfs_dir, [], '/' );
+			$vfs_dir   .= '/'; // Add the trailing slash for the flattening.
+		} else {
+			$vfs_dir   = '';
+			$structure = $this->config['structure'];
+		}
+
+		$this->original_files = array_keys( ArrayTrait::flatten( $structure, $vfs_dir ) );
+		$this->original_dirs  = array_keys( ArrayTrait::flatten( $structure, $vfs_dir, true ) );
 	}
 }
