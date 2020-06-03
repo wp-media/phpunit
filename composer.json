@@ -30,8 +30,6 @@
 			"vendor/antecedent/patchwork/Patchwork.php"
 		]
 	},
-	"minimum-stability": "dev",
-	"prefer-stable": true,
 	"config": {
 		"sort-packages": true
 	},
