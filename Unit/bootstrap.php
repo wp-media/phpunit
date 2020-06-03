@@ -26,6 +26,15 @@ if ( ! defined( 'YEAR_IN_SECONDS' ) ) {
 	define( 'YEAR_IN_SECONDS', 365 * DAY_IN_SECONDS );
 }
 
+// Bootstrap the wp-media/phpunit-{add-on}.
+if (
+	defined( 'WPMEDIA_PHPUNIT_ADDON_ROOT_TEST_DIR' )
+	&&
+	is_readable( WPMEDIA_PHPUNIT_ADDON_ROOT_TEST_DIR . '/bootstrap.php' )
+) {
+	require_once WPMEDIA_PHPUNIT_ADDON_ROOT_TEST_DIR . '/bootstrap.php';
+}
+
 // Bootstrap the plugin.
 if ( is_readable( WPMEDIA_PHPUNIT_ROOT_TEST_DIR . '/bootstrap.php' ) ) {
 	require_once WPMEDIA_PHPUNIT_ROOT_TEST_DIR . '/bootstrap.php';
