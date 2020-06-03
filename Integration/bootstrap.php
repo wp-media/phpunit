@@ -58,8 +58,17 @@ function bootstrap_integration_suite( $wp_tests_dir ) {
 				define( 'WP_ADMIN', true );
 			}
 		},
-		9
+		8
 	);
+
+	// Bootstrap the wp-media/phpunit-{add-on}.
+	if (
+		defined( 'WPMEDIA_PHPUNIT_ADDON_ROOT_TEST_DIR' )
+		&&
+		is_readable( WPMEDIA_PHPUNIT_ADDON_ROOT_TEST_DIR . '/bootstrap.php' )
+	) {
+		require_once WPMEDIA_PHPUNIT_ADDON_ROOT_TEST_DIR . '/bootstrap.php';
+	}
 
 	// Bootstrap the plugin.
 	if ( is_readable( WPMEDIA_PHPUNIT_ROOT_TEST_DIR . '/bootstrap.php' ) ) {
