@@ -9,7 +9,7 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemTestTrait;
 class Test_InitOriginals extends TestCase {
 	protected $path_to_test_data = 'initOriginals.php';
 
-	public function setUp() {
+	public function setUp() : void {
 		parent::setUp();
 
 		$this->skip_initOriginals = false;
