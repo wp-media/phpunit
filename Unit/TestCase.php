@@ -2,14 +2,10 @@
 
 namespace WPMedia\PHPUnit\Unit;
 
-use Brain\Monkey;
-use Brain\Monkey\Functions;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use WPMedia\PHPUnit\TestCaseTrait;
+use Yoast\WPTestUtils\BrainMonkey\TestCase as BaseTestCase;
 
-abstract class TestCase extends PHPUnitTestCase {
-	use MockeryPHPUnitIntegration;
+abstract class TestCase extends BaseTestCase {
 	use TestCaseTrait;
 
 	/**
@@ -20,16 +16,9 @@ abstract class TestCase extends PHPUnitTestCase {
 	protected static $stubPolyfills = false;
 
 	/**
-	 * Set to true in root TestCase to mock the common WP Functions in the setUp().
-	 *
-	 * @var bool
-	 */
-	protected static $mockCommonWpFunctionsInSetUp = false;
-
-	/**
 	 * Prepares the test environment before test class runs.
 	 */
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass() : void {
 		parent::setUpBeforeClass();
 
 		if ( static::$stubPolyfills ) {
@@ -40,53 +29,14 @@ abstract class TestCase extends PHPUnitTestCase {
 	/**
 	 * Prepares the test environment before each test.
 	 */
-	protected function setUp() {
-		parent::setUp();
-		Monkey\setUp();
-
-		if ( static::$mockCommonWpFunctionsInSetUp ) {
-			$this->mockCommonWpFunctions();
-		}
-	}
+	protected function set_up() {
+        parent::set_up();
+    }
 
 	/**
 	 * Cleans up the test environment after each test.
 	 */
-	protected function tearDown() {
-		Monkey\tearDown();
-		parent::tearDown();
-	}
-
-	/**
-	 * Mock common WP functions.
-	 */
-	protected function mockCommonWpFunctions() {
-		Functions\stubs(
-			[
-				'__',
-				'esc_attr__',
-				'esc_html__',
-				'_x',
-				'esc_attr_x',
-				'esc_html_x',
-				'_n',
-				'_nx',
-				'esc_attr',
-				'esc_html',
-				'esc_textarea',
-				'esc_url',
-			]
-		);
-
-		$functions = [
-			'_e',
-			'esc_attr_e',
-			'esc_html_e',
-			'_ex',
-		];
-
-		foreach ( $functions as $function ) {
-			Functions\when( $function )->echoArg();
-		}
-	}
+	protected function tear_down() {
+        parent::tear_down();
+    }
 }

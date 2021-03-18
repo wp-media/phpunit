@@ -4,12 +4,8 @@ namespace WPMedia\PHPUnit;
 
 /**
  * Initialize the test suite.
- *
- * @param string $test_suite Directory name of the test suite. Default is 'Unit'.
  */
-function init_test_suite( $test_suite = 'Unit' ) {
-	init_constants( $test_suite );
-
+function init_test_suite() {
 	check_readiness();
 
 	// Load the Composer autoloader.
@@ -24,8 +20,8 @@ function init_test_suite( $test_suite = 'Unit' ) {
  * Check the system's readiness to run the tests.
  */
 function check_readiness() {
-	if ( version_compare( phpversion(), '5.6.0', '<' ) ) {
-		trigger_error( 'Test Suite requires PHP 5.6 or higher.', E_USER_ERROR ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error -- Valid use case for our testing suite.
+	if ( version_compare( phpversion(), '7.1.0', '<' ) ) {
+		trigger_error( 'Test Suite requires PHP 7.1 or higher.', E_USER_ERROR ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error -- Valid use case for our testing suite.
 	}
 
 	if ( ! file_exists( WPMEDIA_PHPUNIT_ROOT_DIR . '/vendor/autoload.php' ) ) {
@@ -33,13 +29,3 @@ function check_readiness() {
 	}
 }
 
-/**
- * Initialize the constants.
- *
- * @param string $test_suite_folder Directory name of the test suite.
- */
-function init_constants( $test_suite_folder ) {
-	if ( 'Unit' === $test_suite_folder && ! defined( 'ABSPATH' ) ) {
-		define( 'ABSPATH', WPMEDIA_PHPUNIT_ROOT_DIR );
-	}
-}

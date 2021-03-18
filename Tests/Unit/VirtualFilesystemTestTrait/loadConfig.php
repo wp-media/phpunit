@@ -8,7 +8,7 @@ namespace WPMedia\PHPUnit\Tests\Unit\VirtualFilesystemTestTrait;
  */
 class Test_LoadConfig extends TestCase {
 
-	public function setUp() {
+	public function setUp() : void {
 		parent::setUp();
 
 		$this->config = [];

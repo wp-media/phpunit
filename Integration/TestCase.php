@@ -5,9 +5,9 @@ namespace WPMedia\PHPUnit\Integration;
 use Brain\Monkey;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use WPMedia\PHPUnit\TestCaseTrait;
-use WP_UnitTestCase;
+use Yoast\WPTestUtils\WPIntegration\TestCase as WPIntegrationTestCase;
 
-abstract class TestCase extends WP_UnitTestCase {
+abstract class TestCase extends WPIntegrationTestCase {
 	use TestCaseTrait;
 	use MockeryPHPUnitIntegration;
 

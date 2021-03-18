@@ -8,7 +8,7 @@ class Test_Bootstrap extends TestCase {
 
 	function testShouldValidateConstantsValues() {
 		$this->assertSame( dirname( dirname( __DIR__ ) ), WPMEDIA_PHPUNIT_ROOT_DIR );
-		$this->assertSame( WPMEDIA_PHPUNIT_ROOT_DIR, ABSPATH );
+		$this->assertTrue( ABSPATH );
 		$this->assertSame( dirname( dirname( __DIR__ ) ) . DIRECTORY_SEPARATOR . 'Tests/Unit', WPMEDIA_PHPUNIT_ROOT_TEST_DIR );
 	}
 
