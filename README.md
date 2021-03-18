@@ -14,7 +14,7 @@ This means your repo only needs its tests. w00t!
 In your repo's `composer.json` file, add the following `"require-dev"` dependency:
 
 ```json
-"wp-media/phpunit": "dev-master"
+"wp-media/phpunit": "^2.0"
 ```
 
 ## Custom Bootstrapping Your Repo
