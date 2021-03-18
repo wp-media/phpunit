@@ -20,7 +20,10 @@
 		"php": "^7 || ^8",
 		"brain/monkey": "^2.0",
 		"mikey179/vfsstream": "^1.6",
-		"phpunit/phpunit": "^7 || ^9"
+		"phpunit/phpunit": "^7.5"
+	},
+	"require-dev": {
+		"yoast/wp-test-utils": "^0.2.1"
 	},
 	"autoload": {
 		"psr-4": { "WPMedia\\PHPUnit\\": "." }
@@ -34,9 +37,9 @@
 		"sort-packages": true
 	},
 	"scripts": {
-		"test-unit": "./wpmedia-phpunit unit path=Tests/Unit WPMEDIA_PHPUNIT_ROOT_DIR=.",
-		"test-integration": "./wpmedia-phpunit integration path=Tests/Integration/ WPMEDIA_PHPUNIT_ROOT_DIR=. --exclude-group AdminOnly",
-		"test-integration-admin": "./wpmedia-phpunit integration path=Tests/Integration/ WPMEDIA_PHPUNIT_ROOT_DIR=. --group AdminOnly",
+		"test-unit": "\"vendor/bin/phpunit\" --testsuite unit --colors=always --configuration Tests/Unit/phpunit.xml.dist",
+		"test-integration": "\"vendor/bin/phpunit\" --testsuite integration --colors=always --configuration tests/Integration/phpunit.xml.dist --exclude-group AdminOnly",
+		"test-integration-admin": "\"vendor/bin/phpunit\" --testsuite integration --colors=always --configuration tests/Integration/phpunit.xml.dist --group AdminOnly",
 		"run-tests": [
 			"@test-unit",
 			"@test-integration",
