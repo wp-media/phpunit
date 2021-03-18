@@ -6,7 +6,7 @@ use WPMedia\PHPUnit\BootstrapManager;
 use function WPMedia\PHPUnit\init_test_suite;
 use Yoast\WPTestUtils\WPIntegration;
 
-require_once dirname( __DIR__ ) . '/vendor/yoast/wp-test-utils/src/WPIntegration/bootstrap-functions.php';
+require_once WPMEDIA_PHPUNIT_ROOT_DIR . '/vendor/yoast/wp-test-utils/src/WPIntegration/bootstrap-functions.php';
 require_once dirname( dirname( __FILE__ ) ) . '/bootstrap-functions.php';
 init_test_suite();
 

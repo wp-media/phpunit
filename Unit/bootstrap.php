@@ -4,7 +4,7 @@ namespace WPMedia\PHPUnit\Unit;
 
 use function WPMedia\PHPUnit\init_test_suite;
 
-require_once dirname( __DIR__ ) . '/vendor/yoast/wp-test-utils/src/BrainMonkey/bootstrap.php';
+require_once WPMEDIA_PHPUNIT_ROOT_DIR . '/vendor/yoast/wp-test-utils/src/BrainMonkey/bootstrap.php';
 require_once dirname( dirname( __FILE__ ) ) . '/bootstrap-functions.php';
 init_test_suite();
 
