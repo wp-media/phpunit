@@ -1,4 +1,4 @@
-name: Unit/Integration Tests
+name: Unit/Integration Tests - Legacy
 
 on:
   pull_request:
@@ -18,6 +18,10 @@ jobs:
         wp-versions: ['5.3.6']
   
     name: WP ${{ matrix.wp-versions }} with PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }}.
+
+    env:
+      WP_TESTS_DIR: "/tmp/tests/phpunit"
+      WP_CORE_DIR: "/tmp/wordpress-develop"
 
     steps:
     - name: Checkout
