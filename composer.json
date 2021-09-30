@@ -18,10 +18,8 @@
 	"bin": [ "wpmedia-phpunit" ],
 	"require": {
 		"php": "^7 || ^8",
-		"brain/monkey": "^2.0",
 		"mikey179/vfsstream": "^1.6",
-		"phpunit/phpunit": "^7.5",
-		"yoast/wp-test-utils": "^0.2.1"
+		"yoast/wp-test-utils": "^1.0.0"
 	},
 	"autoload": {
 		"psr-4": { "WPMedia\\PHPUnit\\": "." }
