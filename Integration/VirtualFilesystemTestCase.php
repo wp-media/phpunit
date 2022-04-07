@@ -39,15 +39,6 @@ abstract class VirtualFilesystemTestCase extends TestCase {
 	protected $permissions = 0777;
 
 	/**
-	 * Prepares the test environment before each test.
-	 */
-	public function set_up() {
-		parent::set_up();
-
-		$this->init();
-	}
-
-	/**
 	 * Gets the default virtual directory filesystem structure.
 	 *
 	 * @return array default structure.

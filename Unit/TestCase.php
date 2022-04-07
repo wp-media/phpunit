@@ -25,18 +25,4 @@ abstract class TestCase extends BaseTestCase {
 			static::stubPolyfills();
 		}
 	}
-
-	/**
-	 * Prepares the test environment before each test.
-	 */
-	protected function set_up() {
-        parent::set_up();
-    }
-
-	/**
-	 * Cleans up the test environment after each test.
-	 */
-	protected function tear_down() {
-        parent::tear_down();
-    }
 }
