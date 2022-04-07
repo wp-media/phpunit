@@ -2,11 +2,6 @@
 
 namespace WPMedia\PHPUnit\Integration;
 
-use WP_Rest_Request;
-use WP_REST_Response;
-use WP_REST_Server;
-use WP_UnitTestCase;
-
 abstract class RESTfulTestCase extends TestCase {
 	use ApiTrait;
 	use RESTTrait;
@@ -20,8 +15,8 @@ abstract class RESTfulTestCase extends TestCase {
 	 */
 	protected static $api_credentials_config_file;
 
-	public function setUp() {
-		parent::setUp();
+	public function set_up() {
+		parent::set_up();
 
 		$this->setUpServer();
 	}

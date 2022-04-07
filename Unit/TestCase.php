@@ -18,7 +18,7 @@ abstract class TestCase extends BaseTestCase {
 	/**
 	 * Prepares the test environment before test class runs.
 	 */
-	public static function setUpBeforeClass() : void {
+	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 
 		if ( static::$stubPolyfills ) {

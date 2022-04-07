@@ -10,21 +10,21 @@ abstract class AdminTestCase extends TestCase {
 	protected $screen = 'options-general.php?page=wprocket';
 	protected $original_error_level = 0;
 
-	public static function setUpBeforeClass() {
+	public static function set_up_before_class() {
 		remove_action( 'admin_init', '_maybe_update_core' );
 		remove_action( 'admin_init', '_maybe_update_plugins' );
 		remove_action( 'admin_init', '_maybe_update_themes' );
 
 		static::initBeforeClass();
-		parent::setUpBeforeClass();
+		parent::set_up_before_class();
 	}
 
 	public static function initBeforeClass() {
 		// Placeholder if needed.
 	}
 
-	public function setUp() {
-		parent::setUp();
+	public function set_up() {
+		parent::set_up();
 
 		set_current_screen( $this->screen );
 		add_action( 'clear_auth_cookie', [ $this, 'clear_cookies_and_user' ] );
@@ -36,8 +36,7 @@ abstract class AdminTestCase extends TestCase {
 		do_action( 'admin_init' );
 	}
 
-	public function tearDown() {
-		parent::tearDown();
+	public function tear_down() {
 
 		$_POST = [];
 		$_GET  = [];
@@ -46,6 +45,8 @@ abstract class AdminTestCase extends TestCase {
 		remove_action( 'clear_auth_cookie', [ $this, 'clear_cookies_and_user' ] );
 		error_reporting( $this->original_error_level );
 		set_current_screen( 'front' );
+
+		parent::tear_down();
 	}
 
 	public function clear_cookies_and_user() {

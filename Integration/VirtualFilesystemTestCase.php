@@ -41,10 +41,10 @@ abstract class VirtualFilesystemTestCase extends TestCase {
 	/**
 	 * Prepares the test environment before each test.
 	 */
-	public function setUp() {
-		$this->init();
+	public function set_up() {
+		parent::set_up();
 
-		parent::setUp();
+		$this->init();
 	}
 
 	/**

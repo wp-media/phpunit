@@ -6,7 +6,6 @@ use Brain\Monkey;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use WPMedia\PHPUnit\TestCaseTrait;
 use WPAjaxDieContinueException;
-use WPAjaxDieStopException;
 use WP_Ajax_UnitTestCase;
 
 abstract class AjaxTestCase extends WP_Ajax_UnitTestCase {
@@ -33,17 +32,17 @@ abstract class AjaxTestCase extends WP_Ajax_UnitTestCase {
 	/**
 	 * Prepares the test environment before each test.
 	 */
-	public function setUp() {
-		parent::setUp();
+	public function set_up() {
+		parent::set_up();
 		Monkey\setUp();
 	}
 
 	/**
 	 * Cleans up the test environment after each test.
 	 */
-	public function tearDown() {
+	public function tear_down() {
 		Monkey\tearDown();
-		parent::tearDown();
+		parent::tear_down();
 	}
 
 	/**

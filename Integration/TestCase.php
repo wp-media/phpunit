@@ -14,17 +14,17 @@ abstract class TestCase extends WPIntegrationTestCase {
 	/**
 	 * Prepares the test environment before each test.
 	 */
-	public function setUp() {
-		parent::setUp();
+	public function set_up() {
+		parent::set_up();
 		Monkey\setUp();
 	}
 
 	/**
 	 * Cleans up the test environment after each test.
 	 */
-	public function tearDown() {
+	public function tear_down() {
 		Monkey\tearDown();
-		parent::tearDown();
+		parent::tear_down();
 	}
 
 	public function return_0() {
