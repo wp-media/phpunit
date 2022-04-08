@@ -2,11 +2,9 @@
 
 namespace WPMedia\PHPUnit\Unit;
 
-use Brains\Monkey\Functions;
 use WPMedia\PHPUnit\VirtualFilesystemTestTrait;
 
 abstract class VirtualFilesystemTestCase extends TestCase {
-
 	use VirtualFilesystemTestTrait;
 
 	/**
@@ -30,15 +28,6 @@ abstract class VirtualFilesystemTestCase extends TestCase {
 	 * @var int
 	 */
 	protected $permissions = 0777;
-
-	/**
-	 * Prepares the test environment before each test.
-	 */
-	public function setUp() : void {
-		$this->init();
-
-		parent::setUp();
-	}
 
 	/**
 	 * Gets the default virtual directory filesystem structure.
