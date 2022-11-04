@@ -31,7 +31,7 @@ abstract class AdminTestCase extends TestCase {
 
 		// Suppress warnings from "Cannot modify header information - headers already sent by".
 		$this->original_error_level = error_reporting();
-		error_reporting( $this->_error_level & ~E_WARNING );
+		error_reporting( $this->original_error_level & ~E_WARNING );
 
 		do_action( 'admin_init' );
 	}
