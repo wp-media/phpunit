@@ -160,14 +160,14 @@ trait VirtualFilesystemTestTrait {
 
 		if ( ! empty( $this->config['vfs_dir'] ) && '/' !== $this->config['vfs_dir'] ) {
 			$vfs_dir    = rtrim( $this->config['vfs_dir'], '/\\' ); // Remove trailing slash for the get.
-			$structure  = ArrayTrait::get( $this->config['structure'], $vfs_dir, [], '/' );
+			$structure  = $this->get( $this->config['structure'], $vfs_dir, [], '/' );
 			$vfs_dir   .= '/'; // Add the trailing slash for the flattening.
 		} else {
 			$vfs_dir   = '';
 			$structure = $this->config['structure'];
 		}
 
-		$this->original_files = array_keys( ArrayTrait::flatten( $structure, $vfs_dir ) );
-		$this->original_dirs  = array_keys( ArrayTrait::flatten( $structure, $vfs_dir, true ) );
+		$this->original_files = array_keys( $this->flatten( $structure, $vfs_dir ) );
+		$this->original_dirs  = array_keys( $this->flatten( $structure, $vfs_dir, true ) );
 	}
 }

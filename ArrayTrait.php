@@ -13,7 +13,7 @@ trait ArrayTrait {
 	 *
 	 * @return array flattened array
 	 */
-	public static function flatten( array $array, $prepend = '', $arrayOnly = false, $delimiter = '/' ) {
+	public function flatten( array $array, $prepend = '', $arrayOnly = false, $delimiter = '/' ) {
 		$results = [];
 
 		foreach ( $array as $key => $value ) {
@@ -26,7 +26,7 @@ trait ArrayTrait {
 			if ( ( $arrayOnly || is_array( $value ) ) && ! empty( $value ) ) {
 				$results = array_merge(
 					$results,
-					static::flatten( $value, "{$prepend}{$key}{$delimiter}", $arrayOnly, $delimiter )
+					$this->flatten( $value, "{$prepend}{$key}{$delimiter}", $arrayOnly, $delimiter )
 				);
 			} elseif ( ! $arrayOnly ) {
 				$results[ "{$prepend}{$key}" ] = $value;
@@ -46,7 +46,7 @@ trait ArrayTrait {
 	 *
 	 * @return mixed value returned.
 	 */
-	public static function get( $search, $keyToFind, $default = null, $delimiter = '/' ) {
+	public function get( $search, $keyToFind, $default = null, $delimiter = '/' ) {
 		if ( ! is_array( $search ) ) {
 			return $default;
 		}
@@ -79,7 +79,7 @@ trait ArrayTrait {
 	 *
 	 * @return bool
 	 */
-	public static function has( array $search, $keyToFind, $delimiter = '/' ) {
+	public function has( array $search, $keyToFind, $delimiter = '/' ) {
 		if ( empty( $search ) ) {
 			return false;
 		}
