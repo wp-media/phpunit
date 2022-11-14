@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         operating-system: [ubuntu-latest]
-        php-versions: ['7.3', '7.4']
+        php-versions: ['7.4', '8.0', '8.1']
         wp-versions: ['latest']
 
     name: WP ${{ matrix.wp-versions }} with PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }}.
@@ -32,7 +32,7 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
         coverage: none  # XDebug can be enabled here 'coverage: xdebug'
-        tools: composer:v2
+        tools: composer:v2, phpunit
 
     - name: Start mysql service
       run: sudo /etc/init.d/mysql start
