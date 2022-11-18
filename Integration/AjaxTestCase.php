@@ -55,11 +55,11 @@ abstract class AjaxTestCase extends WP_Ajax_UnitTestCase {
 	protected function callAjaxAction() {
 		try {
 			$this->_handleAjax( $this->action );
-
-			return $this->getResponse();
 		} catch ( WPAjaxDieContinueException $e ) {
 			return $e->getMessage();
 		}
+
+		return $this->getResponse();
 	}
 
 	/**
