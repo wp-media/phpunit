@@ -9,6 +9,7 @@ abstract class AdminTestCase extends TestCase {
 	 */
 	protected $screen = 'options-general.php?page=wprocket';
 	protected $original_error_level = 0;
+	protected $_error_level = 0;
 
 	public static function set_up_before_class() {
 		remove_action( 'admin_init', '_maybe_update_core' );
