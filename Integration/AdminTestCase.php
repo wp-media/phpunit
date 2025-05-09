@@ -12,19 +12,20 @@ abstract class AdminTestCase extends TestCase {
 	protected $_error_level = 0;
 
 	public static function set_up_before_class() {
+		parent::set_up_before_class();
+
 		remove_action( 'admin_init', '_maybe_update_core' );
 		remove_action( 'admin_init', '_maybe_update_plugins' );
 		remove_action( 'admin_init', '_maybe_update_themes' );
 
 		static::initBeforeClass();
-		parent::set_up_before_class();
 	}
 
 	public static function initBeforeClass() {
 		// Placeholder if needed.
 	}
 
-	public function set_up() {
+	protected function set_up() {
 		parent::set_up();
 
 		set_current_screen( $this->screen );
@@ -37,8 +38,7 @@ abstract class AdminTestCase extends TestCase {
 		do_action( 'admin_init' );
 	}
 
-	public function tear_down() {
-
+	protected function tear_down() {
 		$_POST = [];
 		$_GET  = [];
 		unset( $GLOBALS['post'], $GLOBALS['comment'] );
