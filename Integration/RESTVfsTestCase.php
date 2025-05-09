@@ -8,7 +8,7 @@ namespace WPMedia\PHPUnit\Integration;
 abstract class RESTVfsTestCase extends VirtualFilesystemTestCase {
 	use RESTTrait;
 
-	protected function set_up() {
+	public function set_up() {
 		parent::set_up();
 
 		$this->setUpServer();

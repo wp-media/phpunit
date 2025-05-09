@@ -25,7 +25,7 @@ abstract class AdminTestCase extends TestCase {
 		// Placeholder if needed.
 	}
 
-	protected function set_up() {
+	public function set_up() {
 		parent::set_up();
 
 		set_current_screen( $this->screen );
@@ -38,7 +38,7 @@ abstract class AdminTestCase extends TestCase {
 		do_action( 'admin_init' );
 	}
 
-	protected function tear_down() {
+	public function tear_down() {
 		$_POST = [];
 		$_GET  = [];
 		unset( $GLOBALS['post'], $GLOBALS['comment'] );

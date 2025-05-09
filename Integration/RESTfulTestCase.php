@@ -15,7 +15,7 @@ abstract class RESTfulTestCase extends TestCase {
 	 */
 	protected static $api_credentials_config_file;
 
-	protected function set_up() {
+	public function set_up() {
 		parent::set_up();
 
 		$this->setUpServer();

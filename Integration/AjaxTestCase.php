@@ -32,7 +32,7 @@ abstract class AjaxTestCase extends WP_Ajax_UnitTestCase {
 	/**
 	 * Prepares the test environment before each test.
 	 */
-	protected function set_up() {
+	public function set_up() {
 		parent::set_up();
 		Monkey\setUp();
 	}
@@ -40,7 +40,7 @@ abstract class AjaxTestCase extends WP_Ajax_UnitTestCase {
 	/**
 	 * Cleans up the test environment after each test.
 	 */
-	protected function tear_down() {
+	public function tear_down() {
 		Monkey\tearDown();
 		parent::tear_down();
 	}
