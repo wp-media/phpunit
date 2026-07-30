@@ -47,7 +47,8 @@ trait TestCaseTrait {
 	protected function get_reflective_method( $method_name, $class_name ) {
 		$class  = new ReflectionClass( $class_name );
 		$method = $class->getMethod( $method_name );
-		$method->setAccessible( true );
+
+		self::set_reflector_accessible( $method, true );
 
 		return $method;
 	}
@@ -64,7 +65,8 @@ trait TestCaseTrait {
 	protected function get_reflective_property( $property, $class ) {
 		$class    = new ReflectionClass( $class );
 		$property = $class->getProperty( $property );
-		$property->setAccessible( true );
+
+		self::set_reflector_accessible( $property, true );
 
 		return $property;
 	}
@@ -81,8 +83,15 @@ trait TestCaseTrait {
 	 */
 	protected function set_reflective_property( $value, $property, $instance ) {
 		$property = $this->get_reflective_property( $property, $instance );
-		$property->setValue( $instance, $value );
-		$property->setAccessible( false );
+
+		// A static property has no target object: passing anything but null is deprecated as of PHP 8.3.
+		if ( $property->isStatic() ) {
+			$property->setValue( null, $value );
+		} else {
+			$property->setValue( $instance, $value );
+		}
+
+		self::set_reflector_accessible( $property, false );
 
 		return $property;
 	}
@@ -90,11 +99,31 @@ trait TestCaseTrait {
 	protected function getNonPublicPropertyValue( $property, $class, $instance = null ) {
 		$property = $this->get_reflective_property( $property, $class );
 
-		if ( is_null( $instance ) ) {
+		if ( is_null( $instance ) || $property->isStatic() ) {
 			return $property->getValue();
 		}
 
 		return $property->getValue( $instance );
+	}
+
+	/**
+	 * Toggles accessibility on a reflected method or property.
+	 *
+	 * ReflectionMethod::setAccessible() and ReflectionProperty::setAccessible() have no effect since PHP 8.1, where
+	 * reflection grants access to non-public members by default, and are deprecated as of PHP 8.5. They are still
+	 * required on PHP 7.4 and 8.0.
+	 *
+	 * @param ReflectionMethod|ReflectionProperty $reflector  Reflected method or property.
+	 * @param bool                                $accessible Whether to make the member accessible.
+	 *
+	 * @return void
+	 */
+	private static function set_reflector_accessible( $reflector, $accessible ) {
+		if ( PHP_VERSION_ID >= 80100 ) {
+			return;
+		}
+
+		$reflector->setAccessible( $accessible );
 	}
 
 	/**
