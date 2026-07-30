@@ -17,7 +17,7 @@
 	},
 	"bin": [ "wpmedia-phpunit" ],
 	"require": {
-		"php": "^7 || ^8",
+		"php": ">=7.4",
 		"mikey179/vfsstream": "^1.6",
 		"yoast/wp-test-utils": "^1.0.0"
 	},
