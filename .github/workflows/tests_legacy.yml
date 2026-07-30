@@ -15,7 +15,7 @@ jobs:
       matrix:
         operating-system: [ubuntu-latest]
         php-versions: ['7.4']
-        wp-versions: ['5.5.8']
+        wp-versions: ['5.9']
 
     name: WP ${{ matrix.wp-versions }} with PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }}.
 
@@ -42,9 +42,6 @@ jobs:
 
     - name: Setup problem matchers for PHPUnit
       run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-
-    - name: Require PHPUnit 7.5 for WP compatibility
-      run: composer require --dev --no-scripts phpunit/phpunit "^7.5" -W
 
     - name: Install Composer dependencies
       uses: "ramsey/composer-install@v3"
