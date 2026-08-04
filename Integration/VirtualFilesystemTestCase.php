@@ -2,7 +2,6 @@
 
 namespace WPMedia\PHPUnit\Integration;
 
-use Brains\Monkey\Functions;
 use WPMedia\PHPUnit\VirtualFilesystemTestTrait;
 
 abstract class VirtualFilesystemTestCase extends TestCase {

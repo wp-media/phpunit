@@ -15,7 +15,7 @@ jobs:
       matrix:
         operating-system: [ubuntu-latest]
         php-versions: ['7.4']
-        wp-versions: ['5.5.8']
+        wp-versions: ['5.9']
 
     name: WP ${{ matrix.wp-versions }} with PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }}.
 
@@ -25,7 +25,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -43,11 +43,8 @@ jobs:
     - name: Setup problem matchers for PHPUnit
       run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-    - name: Require PHPUnit 7.5 for WP compatibility
-      run: composer require --dev --no-scripts phpunit/phpunit "^7.5" -W
-
     - name: Install Composer dependencies
-      uses: "ramsey/composer-install@v3"
+      uses: ramsey/composer-install@v4
       with:
         # Bust the cache at least once a month - output format: YYYY-MM.
         custom-cache-suffix: $(date -u "+%Y-%m")
