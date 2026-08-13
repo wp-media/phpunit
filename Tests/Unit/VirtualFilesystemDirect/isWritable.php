@@ -13,6 +13,12 @@ class Test_IsWritable extends TestCase {
 		$this->assertTrue( $this->filesystem->is_writable( 'public/baz/index.html' ) );
 	}
 
+	public function testShouldReturnFalseWhenFileIsReadOnly() {
+		$file = $this->filesystem->getFile( 'baz/index.html' );
+		$file->chmod( 0444 ); // Read-only.
+		$this->assertFalse( $this->filesystem->is_writable( 'baz/index.html' ) );
+	}
+
 	public function testShouldReturnFalseWhenNoAccess() {
 		$file = $this->filesystem->getFile( 'baz/index.html' );
 		$file->chmod( 000 ); // Only root user.
