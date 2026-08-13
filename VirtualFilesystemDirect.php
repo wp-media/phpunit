@@ -4,7 +4,7 @@ namespace WPMedia\PHPUnit;
 
 use FilesystemIterator;
 use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamAbstractContent;
+use org\bovigo\vfs\vfsStreamContainer;
 use org\bovigo\vfs\vfsStreamFile;
 use org\bovigo\vfs\vfsStreamDirectory;
 use RecursiveDirectoryIterator;
@@ -16,7 +16,6 @@ use RecursiveIteratorIterator;
  * @since 1.1
  */
 class VirtualFilesystemDirect {
-	use TestCaseTrait;
 
 	/**
 	 * Root filesystem directory.
@@ -701,11 +700,14 @@ class VirtualFilesystemDirect {
 			return true;
 		}
 
-		$child   = $this->getDir( $dir );
-		$dirname = $this->getNonPublicPropertyValue( 'name', vfsStreamAbstractContent::class, $child );
-		$parent  = $this->getParentDir( $dirname, $child );
+		$child  = $this->getDir( $dir );
+		$parent = $this->getParentDir( $dir );
 
-		return $parent->removeChild( $dirname );
+		if ( ! $parent instanceof vfsStreamContainer ) {
+			return false;
+		}
+
+		return $parent->removeChild( $child->getName() );
 	}
 
 	/**
@@ -754,26 +756,25 @@ class VirtualFilesystemDirect {
 	/**
 	 * Gets the parent directory, if it exists.
 	 *
+	 * Derives the parent path from the given directory's own (already known) path instead of
+	 * reflecting into vfsStream's private `parentPath` property, so it keeps working across
+	 * vfsStream versions.
+	 *
 	 * @since 1.1
 	 *
-	 * @param vfsStreamDirectory $child   Instance of the child directory.
-	 *
-	 * @param string             $dirname Child directory name.
+	 * @param string $dir Absolute path to the child directory.
 	 *
 	 * @return vfsStreamDirectory|null parent directory on success; null when no parent directory.
 	 */
-	protected function getParentDir( $dirname, $child ) {
-		$parentPath = $this->getNonPublicPropertyValue( 'parentPath', vfsStreamAbstractContent::class, $child );
+	protected function getParentDir( $dir ) {
+		$dir = rtrim( $this->prefixRoot( $dir ), '/\\' );
 
 		// Directory is root. There's no parent. Bail out.
-		if ( is_null( $parentPath ) && $dirname === $this->root ) {
+		if ( $dir === $this->root ) {
 			return null;
 		}
 
-		// There's no parent. Bail out.
-		if ( is_null( $parentPath ) ) {
-			return null;
-		}
+		$parentPath = dirname( $dir );
 
 		return $this->getDir( $parentPath );
 	}

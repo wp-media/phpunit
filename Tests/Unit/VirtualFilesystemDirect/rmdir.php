@@ -43,4 +43,32 @@ class Test_Rmdir extends TestCase {
 		$this->assertFalse( $this->filesystem->exists( 'public' ) );
 		$this->assertFalse( $this->filesystem->is_dir( 'public' ) );
 	}
+
+	public function testShouldRemoveNestedDirRecursivelyAndPreserveSiblings() {
+		// "Tests/Unit/SomeClass" is nested two levels below the root, and its
+		// grandparent ("Tests") and sibling file ("Tests/Unit/bootstrap.php")
+		// must be left untouched.
+		$this->assertTrue( $this->filesystem->exists( 'Tests/Unit/SomeClass/' ) );
+		$this->assertTrue( $this->filesystem->exists( 'Tests/Unit/SomeClass/getFile.php' ) );
+		$this->assertTrue( $this->filesystem->exists( 'Tests/Unit/bootstrap.php' ) );
+
+		$this->assertTrue( $this->filesystem->rmdir( 'Tests/Unit/SomeClass/', true ) );
+
+		$this->assertFalse( $this->filesystem->exists( 'Tests/Unit/SomeClass/' ) );
+		$this->assertFalse( $this->filesystem->exists( 'Tests/Unit/SomeClass/getFile.php' ) );
+
+		// Sibling file, and parent/grandparent directories, remain intact.
+		$this->assertTrue( $this->filesystem->exists( 'Tests/Unit/bootstrap.php' ) );
+		$this->assertTrue( $this->filesystem->exists( 'Tests/Unit/' ) );
+		$this->assertTrue( $this->filesystem->exists( 'Tests/' ) );
+		$this->assertTrue( $this->filesystem->exists( 'public' ) );
+	}
+
+	public function testShouldRemoveWhenRecursiveUsingUrl() {
+		$dirUrl = $this->filesystem->getUrl( 'baz' );
+
+		$this->assertTrue( $this->filesystem->exists( $dirUrl ) );
+		$this->assertTrue( $this->filesystem->rmdir( $dirUrl, true ) );
+		$this->assertFalse( $this->filesystem->exists( $dirUrl ) );
+	}
 }
