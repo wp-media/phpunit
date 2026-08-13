@@ -1,0 +1,265 @@
+parameters:
+	ignoreErrors:
+		-
+			rawMessage: Offset 'WPMEDIA_PHPUNIT_ROOT_DIR' does not exist on string.
+			identifier: offsetAccess.notFound
+			count: 1
+			path: BootstrapManager.php
+
+		-
+			rawMessage: 'Parameter #1 $root of static method WPMedia\PHPUnit\BootstrapManager::getRootDir() expects string, array|bool given.'
+			identifier: argument.type
+			count: 1
+			path: BootstrapManager.php
+
+		-
+			rawMessage: 'Strict comparison using === between false and string will always evaluate to false.'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: BootstrapManager.php
+
+		-
+			rawMessage: 'Call to WPMedia\PHPUnit\Integration\AdminTestCase::initBeforeClass() on a separate line has no effect.'
+			identifier: staticMethod.resultUnused
+			count: 1
+			path: Integration/AdminTestCase.php
+
+		-
+			rawMessage: Constant AUTH_COOKIE not found.
+			identifier: constant.notFound
+			count: 1
+			path: Integration/AdminTestCase.php
+
+		-
+			rawMessage: Constant LOGGED_IN_COOKIE not found.
+			identifier: constant.notFound
+			count: 1
+			path: Integration/AdminTestCase.php
+
+		-
+			rawMessage: Constant PASS_COOKIE not found.
+			identifier: constant.notFound
+			count: 1
+			path: Integration/AdminTestCase.php
+
+		-
+			rawMessage: Constant SECURE_AUTH_COOKIE not found.
+			identifier: constant.notFound
+			count: 1
+			path: Integration/AdminTestCase.php
+
+		-
+			rawMessage: Constant USER_COOKIE not found.
+			identifier: constant.notFound
+			count: 1
+			path: Integration/AdminTestCase.php
+
+		-
+			rawMessage: 'Method WPMedia\PHPUnit\Integration\AjaxTestCase::getApiCredential() should return string but returns bool.'
+			identifier: return.type
+			count: 1
+			path: Integration/AjaxTestCase.php
+
+		-
+			rawMessage: 'Class WP_REST_Request referenced with incorrect case: WP_Rest_Request.'
+			identifier: class.nameCase
+			count: 1
+			path: Integration/RESTTrait.php
+
+		-
+			rawMessage: 'Class WP_REST_Request referenced with incorrect case: WP_Rest_Request.'
+			identifier: class.nameCase
+			count: 1
+			path: Integration/RESTVfsTestCase.php
+
+		-
+			rawMessage: Variable $wp_rest_server in PHPDoc tag @var does not exist.
+			identifier: varTag.variableNotFound
+			count: 1
+			path: Integration/RESTVfsTestCase.php
+
+		-
+			rawMessage: 'Class WP_REST_Request referenced with incorrect case: WP_Rest_Request.'
+			identifier: class.nameCase
+			count: 1
+			path: Integration/RESTfulTestCase.php
+
+		-
+			rawMessage: 'Method WPMedia\PHPUnit\Integration\RESTfulTestCase::getApiCredential() should return string but returns bool.'
+			identifier: return.type
+			count: 1
+			path: Integration/RESTfulTestCase.php
+
+		-
+			rawMessage: Variable $wp_rest_server in PHPDoc tag @var does not exist.
+			identifier: varTag.variableNotFound
+			count: 1
+			path: Integration/RESTfulTestCase.php
+
+		-
+			rawMessage: Constant WPMEDIA_PHPUNIT_ROOT_DIR not found.
+			identifier: constant.notFound
+			count: 1
+			path: Integration/bootstrap.php
+
+		-
+			rawMessage: Constant WPMEDIA_PHPUNIT_ROOT_DIR not found.
+			identifier: constant.notFound
+			count: 1
+			path: Tests/Integration/VirtualFilesystemDirect/TestCase.php
+
+		-
+			rawMessage: 'Found usage of constant WP_ADMIN. Use is_admin() instead.'
+			identifier: phpstanWP.wpConstant.fetch
+			count: 1
+			path: Tests/Integration/testAdminOnly.php
+
+		-
+			rawMessage: Constant WPMEDIA_PHPUNIT_ROOT_DIR not found.
+			identifier: constant.notFound
+			count: 1
+			path: Tests/Integration/testBootstrap.php
+
+		-
+			rawMessage: Catching internal class PHPUnit\Framework\AssertionFailedError.
+			identifier: catch.internalClass
+			count: 1
+			path: Tests/Integration/testHttpRequestTrait.php
+
+		-
+			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''WPMedia\\PHPUnit\\VirtualFilesystemDirect'' and WPMedia\PHPUnit\VirtualFilesystemDirect will always evaluate to true.'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: Tests/Integration/testHttpRequestTraitWithVirtualFilesystem.php
+
+		-
+			rawMessage: Constant WPMEDIA_PHPUNIT_ROOT_DIR not found.
+			identifier: constant.notFound
+			count: 1
+			path: Tests/Integration/testHttpRequestTraitWithVirtualFilesystem.php
+
+		-
+			rawMessage: Constant WPMEDIA_PHPUNIT_ROOT_DIR not found.
+			identifier: constant.notFound
+			count: 2
+			path: Tests/Unit/VirtualFilesystemDirect/TestCase.php
+
+		-
+			rawMessage: 'Method WPMedia\PHPUnit\VirtualFilesystemDirect::rmdir() invoked with 3 parameters, 1-2 required.'
+			identifier: arguments.count
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/rmdir.php
+
+		-
+			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertNull() with int will always evaluate to false.'
+			identifier: method.impossibleType
+			count: 2
+			path: Tests/Unit/VirtualFilesystemDirect/setFilemtime.php
+
+		-
+			rawMessage: Constant WPMEDIA_PHPUNIT_ROOT_DIR not found.
+			identifier: constant.notFound
+			count: 1
+			path: Tests/Unit/VirtualFilesystemTestTrait/TestCase.php
+
+		-
+			rawMessage: Constant WPMEDIA_PHPUNIT_ROOT_DIR not found.
+			identifier: constant.notFound
+			count: 1
+			path: Tests/Unit/testBootstrap.php
+
+		-
+			rawMessage: 'Method WPMedia\PHPUnit\Tests\Unit\ReflectionTarget::secret() is unused.'
+			identifier: method.unused
+			count: 1
+			path: Tests/Unit/testTestCaseTrait.php
+
+		-
+			rawMessage: 'Call to function is_array() with array will always evaluate to true.'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: Unit/VirtualFilesystemTestCase.php
+
+		-
+			rawMessage: 'Call to function is_null() with string will always evaluate to false.'
+			identifier: function.impossibleType
+			count: 2
+			path: Unit/VirtualFilesystemTestCase.php
+
+		-
+			rawMessage: Constant WPMEDIA_PHPUNIT_ROOT_DIR not found.
+			identifier: constant.notFound
+			count: 1
+			path: Unit/bootstrap.php
+
+		-
+			rawMessage: Binary operation "+" between non-empty-string and non-empty-string results in an error.
+			identifier: binaryOp.invalid
+			count: 3
+			path: VirtualFilesystemDirect.php
+
+		-
+			rawMessage: 'Call to function is_null() with bool|org\bovigo\vfs\vfsStreamFile will always evaluate to false.'
+			identifier: function.impossibleType
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			rawMessage: 'Call to function is_string() with string will always evaluate to true.'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			rawMessage: Instanceof between org\bovigo\vfs\vfsStreamDirectory and org\bovigo\vfs\vfsStreamDirectory will always evaluate to true.
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			rawMessage: 'Method WPMedia\PHPUnit\VirtualFilesystemDirect::getDir() should return org\bovigo\vfs\vfsStreamDirectory|null but returns org\bovigo\vfs\vfsStreamContent.'
+			identifier: return.type
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			rawMessage: 'Method WPMedia\PHPUnit\VirtualFilesystemDirect::getFile() should return org\bovigo\vfs\vfsStreamFile|null but returns org\bovigo\vfs\vfsStreamContent.'
+			identifier: return.type
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			rawMessage: 'Method WPMedia\PHPUnit\VirtualFilesystemDirect::getnumchmodfromh() should return int but returns string.'
+			identifier: return.type
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			rawMessage: 'Method WPMedia\PHPUnit\VirtualFilesystemDirect::setFilemtime() should return int but returns null.'
+			identifier: return.type
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			rawMessage: 'PHPDoc tag @param references unknown parameter: $filectime'
+			identifier: parameter.notFound
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			rawMessage: 'Property WPMedia\PHPUnit\VirtualFilesystemDirect::$filesystem (org\bovigo\vfs\vfsStreamDirectory) does not accept null.'
+			identifier: assign.propertyType
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			rawMessage: 'Property WPMedia\PHPUnit\VirtualFilesystemDirect::$root (string) does not accept null.'
+			identifier: assign.propertyType
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			rawMessage: Constant WPMEDIA_PHPUNIT_ROOT_DIR not found.
+			identifier: constant.notFound
+			count: 3
+			path: bootstrap-functions.php
