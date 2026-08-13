@@ -18,10 +18,14 @@ function init_test_suite() {
 
 /**
  * Check the system's readiness to run the tests.
+ *
+ * @param string|null $php_version PHP version to validate. Defaults to the running version.
  */
-function check_readiness() {
-	if ( version_compare( phpversion(), '7.1.0', '<' ) ) {
-		trigger_error( 'Test Suite requires PHP 7.1 or higher.', E_USER_ERROR ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error -- Valid use case for our testing suite.
+function check_readiness( $php_version = null ) {
+	$php_version = $php_version ?: phpversion();
+
+	if ( version_compare( $php_version, '7.4.0', '<' ) ) {
+		trigger_error( 'Test Suite requires PHP 7.4 or higher.', E_USER_ERROR ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error -- Valid use case for our testing suite.
 	}
 
 	if ( ! file_exists( WPMEDIA_PHPUNIT_ROOT_DIR . '/vendor/autoload.php' ) ) {
