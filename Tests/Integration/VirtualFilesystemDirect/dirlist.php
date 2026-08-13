@@ -17,6 +17,16 @@ class Test_DirList extends TestCase {
 		$this->assertSame( $expected, $this->filesystem->dirlist( $path ) );
 	}
 
+	public function testShouldReturnListingWhenDirectoryIsReadOnly() {
+		$dir = $this->filesystem->getDir( 'baz' );
+		$dir->chmod( 0444 ); // Read-only directory.
+
+		$listing = $this->filesystem->dirlist( 'baz' );
+
+		$this->assertNotFalse( $listing );
+		$this->assertArrayHasKey( 'index.html', $listing );
+	}
+
 	private function prepListing( $path, $entries ) {
 		$path = rtrim( $path, '\//' );
 		foreach ( $entries as $entry => $info ) {

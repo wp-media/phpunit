@@ -581,7 +581,7 @@ class VirtualFilesystemDirect {
 	 * @return bool Whether $file is readable.
 	 */
 	public function is_readable( $file ) {
-		return is_writeable( $this->getUrl( $file ) );
+		return is_readable( $this->getUrl( $file ) );
 	}
 
 	/**
