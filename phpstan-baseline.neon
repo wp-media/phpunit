@@ -1,0 +1,331 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Offset 'WPMEDIA_PHPUNIT…' does not exist on string\\.$#"
+			count: 1
+			path: BootstrapManager.php
+
+		-
+			message: "#^Parameter \\#1 \\$root of static method WPMedia\\\\PHPUnit\\\\BootstrapManager\\:\\:getRootDir\\(\\) expects string, array\\|bool given\\.$#"
+			count: 1
+			path: BootstrapManager.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
+			count: 1
+			path: BootstrapManager.php
+
+		-
+			message: "#^Call to WPMedia\\\\PHPUnit\\\\Integration\\\\AdminTestCase\\:\\:initBeforeClass\\(\\) on a separate line has no effect\\.$#"
+			count: 1
+			path: Integration/AdminTestCase.php
+
+		-
+			message: "#^Constant AUTH_COOKIE not found\\.$#"
+			count: 1
+			path: Integration/AdminTestCase.php
+
+		-
+			message: "#^Constant LOGGED_IN_COOKIE not found\\.$#"
+			count: 1
+			path: Integration/AdminTestCase.php
+
+		-
+			message: "#^Constant PASS_COOKIE not found\\.$#"
+			count: 1
+			path: Integration/AdminTestCase.php
+
+		-
+			message: "#^Constant SECURE_AUTH_COOKIE not found\\.$#"
+			count: 1
+			path: Integration/AdminTestCase.php
+
+		-
+			message: "#^Constant USER_COOKIE not found\\.$#"
+			count: 1
+			path: Integration/AdminTestCase.php
+
+		-
+			message: "#^Method WPMedia\\\\PHPUnit\\\\Integration\\\\AjaxTestCase\\:\\:getApiCredential\\(\\) should return string but returns bool\\.$#"
+			count: 1
+			path: Integration/AjaxTestCase.php
+
+		-
+			message: "#^Class WP_REST_Request referenced with incorrect case\\: WP_Rest_Request\\.$#"
+			count: 1
+			path: Integration/RESTTrait.php
+
+		-
+			message: "#^Class WP_REST_Request referenced with incorrect case\\: WP_Rest_Request\\.$#"
+			count: 1
+			path: Integration/RESTVfsTestCase.php
+
+		-
+			message: "#^Variable \\$wp_rest_server in PHPDoc tag @var does not exist\\.$#"
+			count: 1
+			path: Integration/RESTVfsTestCase.php
+
+		-
+			message: "#^Class WP_REST_Request referenced with incorrect case\\: WP_Rest_Request\\.$#"
+			count: 1
+			path: Integration/RESTfulTestCase.php
+
+		-
+			message: "#^Method WPMedia\\\\PHPUnit\\\\Integration\\\\RESTfulTestCase\\:\\:getApiCredential\\(\\) should return string but returns bool\\.$#"
+			count: 1
+			path: Integration/RESTfulTestCase.php
+
+		-
+			message: "#^Variable \\$wp_rest_server in PHPDoc tag @var does not exist\\.$#"
+			count: 1
+			path: Integration/RESTfulTestCase.php
+
+		-
+			message: "#^Call to function is_array\\(\\) with array will always evaluate to true\\.$#"
+			count: 1
+			path: Integration/VirtualFilesystemTestCase.php
+
+		-
+			message: "#^Call to function is_null\\(\\) with string will always evaluate to false\\.$#"
+			count: 2
+			path: Integration/VirtualFilesystemTestCase.php
+
+		-
+			message: "#^Constant WPMEDIA_PHPUNIT_ROOT_DIR not found\\.$#"
+			count: 1
+			path: Integration/bootstrap.php
+
+		-
+			message: "#^Constant WPMEDIA_PHPUNIT_ROOT_DIR not found\\.$#"
+			count: 1
+			path: Tests/Integration/VirtualFilesystemDirect/TestCase.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Integration\\\\VirtualFilesystemDirect\\:\\:dirlist references an invalid method\\.$#"
+			count: 1
+			path: Tests/Integration/VirtualFilesystemDirect/dirlist.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPIntegration\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:gethchmod references an invalid method\\.$#"
+			count: 1
+			path: Tests/Integration/VirtualFilesystemDirect/gethchmod.php
+
+		-
+			message: "#^Constant WPMEDIA_PHPUNIT_ROOT_DIR not found\\.$#"
+			count: 2
+			path: Tests/Integration/testBootstrap.php
+
+		-
+			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'WPMedia\\\\\\\\PHPUnit\\\\\\\\VirtualFilesystemDirect' and WPMedia\\\\PHPUnit\\\\VirtualFilesystemDirect will always evaluate to true\\.$#"
+			count: 1
+			path: Tests/Integration/testHttpRequestTraitWithVirtualFilesystem.php
+
+		-
+			message: "#^Constant WPMEDIA_PHPUNIT_ROOT_DIR not found\\.$#"
+			count: 1
+			path: Tests/Integration/testHttpRequestTraitWithVirtualFilesystem.php
+
+		-
+			message: "#^Constant WPMEDIA_PHPUNIT_ROOT_DIR not found\\.$#"
+			count: 2
+			path: Tests/Unit/VirtualFilesystemDirect/TestCase.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:atime references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/atime.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:delete references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/delete.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:exists references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/exists.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:get_contents references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/getContents.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:getDirsListing references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/getDirsListing.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:getFile references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/getFile.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:getFilesListing references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/getFilesListing.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:getListing references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/getListing.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:getUrl references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/getUrl.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:getchmod references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/getchmod.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:group references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/group.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:mtime references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/mtime.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:owner references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/owner.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:put_contents references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/putContents.php
+
+		-
+			message: "#^Method WPMedia\\\\PHPUnit\\\\VirtualFilesystemDirect\\:\\:rmdir\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/rmdir.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:setFilemtime references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/setFilemtime.php
+
+		-
+			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with int will always evaluate to false\\.$#"
+			count: 2
+			path: Tests/Unit/VirtualFilesystemDirect/setFilemtime.php
+
+		-
+			message: "#^@covers value WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\VirtualFilesystemDirect\\:\\:size references an invalid method\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemDirect/size.php
+
+		-
+			message: "#^Call to function is_array\\(\\) with array will always evaluate to true\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemTestTrait/TestCase.php
+
+		-
+			message: "#^Call to function is_null\\(\\) with string will always evaluate to false\\.$#"
+			count: 2
+			path: Tests/Unit/VirtualFilesystemTestTrait/TestCase.php
+
+		-
+			message: "#^Constant WPMEDIA_PHPUNIT_ROOT_DIR not found\\.$#"
+			count: 1
+			path: Tests/Unit/VirtualFilesystemTestTrait/TestCase.php
+
+		-
+			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) with true will always evaluate to true\\.$#"
+			count: 1
+			path: Tests/Unit/testBootstrap.php
+
+		-
+			message: "#^Constant WPMEDIA_PHPUNIT_ROOT_DIR not found\\.$#"
+			count: 1
+			path: Tests/Unit/testBootstrap.php
+
+		-
+			message: "#^Method WPMedia\\\\PHPUnit\\\\Tests\\\\Unit\\\\ReflectionTarget\\:\\:secret\\(\\) is unused\\.$#"
+			count: 1
+			path: Tests/Unit/testTestCaseTrait.php
+
+		-
+			message: "#^Call to function is_array\\(\\) with array will always evaluate to true\\.$#"
+			count: 1
+			path: Unit/VirtualFilesystemTestCase.php
+
+		-
+			message: "#^Call to function is_null\\(\\) with string will always evaluate to false\\.$#"
+			count: 2
+			path: Unit/VirtualFilesystemTestCase.php
+
+		-
+			message: "#^Constant WPMEDIA_PHPUNIT_ROOT_DIR not found\\.$#"
+			count: 1
+			path: Unit/bootstrap.php
+
+		-
+			message: "#^Binary operation \"\\+\" between non\\-empty\\-string and non\\-empty\\-string results in an error\\.$#"
+			count: 3
+			path: VirtualFilesystemDirect.php
+
+		-
+			message: "#^Call to function is_null\\(\\) with bool\\|org\\\\bovigo\\\\vfs\\\\vfsStreamFile will always evaluate to false\\.$#"
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			message: "#^Call to function is_string\\(\\) with string will always evaluate to true\\.$#"
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			message: "#^Instanceof between org\\\\bovigo\\\\vfs\\\\vfsStreamDirectory and org\\\\bovigo\\\\vfs\\\\vfsStreamDirectory will always evaluate to true\\.$#"
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			message: "#^Method WPMedia\\\\PHPUnit\\\\VirtualFilesystemDirect\\:\\:getDir\\(\\) should return org\\\\bovigo\\\\vfs\\\\vfsStreamDirectory\\|null but returns org\\\\bovigo\\\\vfs\\\\vfsStreamContent\\.$#"
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			message: "#^Method WPMedia\\\\PHPUnit\\\\VirtualFilesystemDirect\\:\\:getFile\\(\\) should return org\\\\bovigo\\\\vfs\\\\vfsStreamFile\\|null but returns org\\\\bovigo\\\\vfs\\\\vfsStreamContent\\.$#"
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			message: "#^Method WPMedia\\\\PHPUnit\\\\VirtualFilesystemDirect\\:\\:getnumchmodfromh\\(\\) should return int but returns string\\.$#"
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			message: "#^Method WPMedia\\\\PHPUnit\\\\VirtualFilesystemDirect\\:\\:setFilemtime\\(\\) should return int but returns null\\.$#"
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$filectime$#"
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			message: "#^Property WPMedia\\\\PHPUnit\\\\VirtualFilesystemDirect\\:\\:\\$filesystem \\(org\\\\bovigo\\\\vfs\\\\vfsStreamDirectory\\) does not accept null\\.$#"
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			message: "#^Property WPMedia\\\\PHPUnit\\\\VirtualFilesystemDirect\\:\\:\\$root \\(string\\) does not accept null\\.$#"
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			message: "#^Result of && is always true\\.$#"
+			count: 1
+			path: VirtualFilesystemDirect.php
+
+		-
+			message: "#^Constant WPMEDIA_PHPUNIT_ROOT_DIR not found\\.$#"
+			count: 3
+			path: bootstrap-functions.php
