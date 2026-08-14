@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WPMedia\PHPUnit;
 
 trait VirtualFilesystemTestTrait {
@@ -25,7 +27,7 @@ trait VirtualFilesystemTestTrait {
 	 *
 	 * @var string
 	 */
-	protected $rootVirtualUrl;
+	protected $rootVirtualUrl; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase -- Public API property; renaming would be a breaking change for consumers.
 
 	/**
 	 * Structure + test data configuration.
@@ -46,7 +48,7 @@ trait VirtualFilesystemTestTrait {
 	 *
 	 * @var bool
 	 */
-	protected $skip_initOriginals = false;
+	protected $skip_initOriginals = false; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase -- Public API property; renaming would be a breaking change for consumers.
 
 	/**
 	 * Original virtual files with flattened full paths.
@@ -71,8 +73,9 @@ trait VirtualFilesystemTestTrait {
 		}
 		$this->initOriginals();
 
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- Public API property; renaming would be a breaking change for consumers.
 		$this->filesystem     = new VirtualFilesystemDirect( $this->rootVirtualDir, $this->mergeStructure(), $this->permissions );
-		$this->rootVirtualUrl = $this->filesystem->getUrl( '/' );
+		$this->rootVirtualUrl = $this->filesystem->getUrl( '/' ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- Public API property; renaming would be a breaking change for consumers.
 	}
 
 	/**
@@ -80,7 +83,7 @@ trait VirtualFilesystemTestTrait {
 	 *
 	 * @return mixed
 	 */
-	public function providerTestData() {
+	public function providerTestData() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- Public API method; renaming would be a breaking change for consumers.
 		$this->loadConfig();
 
 		return $this->config['test_data'];
@@ -89,7 +92,7 @@ trait VirtualFilesystemTestTrait {
 	/**
 	 * Loads the configuration for the vfs structure and test data.
 	 */
-	protected function loadConfig() {
+	protected function loadConfig() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- Public API method; renaming would be a breaking change for consumers.
 		$this->config = array_merge(
 			[
 				'vfs_dir'   => '',
@@ -105,7 +108,7 @@ trait VirtualFilesystemTestTrait {
 	 *
 	 * @return string
 	 */
-	public function getPathToFixturesDir() {
+	public function getPathToFixturesDir() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- Public API method; renaming would be a breaking change for consumers.
 		return '';
 	}
 
@@ -114,7 +117,7 @@ trait VirtualFilesystemTestTrait {
 	 *
 	 * @return array merged structure
 	 */
-	protected function mergeStructure() {
+	protected function mergeStructure() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- Public API method; renaming would be a breaking change for consumers.
 		// If already merged, return it.
 		if ( ! empty( $this->merged_structure ) ) {
 			return $this->merged_structure;
@@ -136,28 +139,37 @@ trait VirtualFilesystemTestTrait {
 	 *
 	 * @return array default structure.
 	 */
-	public function getDefaultVfs() {
+	public function getDefaultVfs() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- Public API method and the package's documented single override point (issue #36); renaming would be a breaking change for consumers.
 		return [
-			'Tests' => [
-				'Integration' => [],
-				'Unit'        => [],
+			'wp-admin'      => [],
+			'wp-content'    => [
+				'mu-plugins' => [],
+				'plugins'    => [
+					'wp-rocket' => [],
+				],
+				'themes'     => [
+					'twentytwenty' => [],
+				],
+				'uploads'    => [],
 			],
+			'wp-includes'   => [],
+			'wp-config.php' => '',
 		];
 	}
 
 	/**
 	 * Initializes the original files and directories properties for use in the tests.
 	 */
-	protected function initOriginals() {
+	protected function initOriginals() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- Public API method; renaming would be a breaking change for consumers.
 		// Bail out when "skip_initOriginals" is set to true.
-		if ( $this->skip_initOriginals ) {
+		if ( $this->skip_initOriginals ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- Public API property; renaming would be a breaking change for consumers.
 			return;
 		}
 
 		if ( ! empty( $this->config['vfs_dir'] ) && '/' !== $this->config['vfs_dir'] ) {
-			$vfs_dir    = rtrim( $this->config['vfs_dir'], '/\\' ); // Remove trailing slash for the get.
-			$structure  = $this->get( $this->config['structure'], $vfs_dir, [], '/' );
-			$vfs_dir   .= '/'; // Add the trailing slash for the flattening.
+			$vfs_dir   = rtrim( $this->config['vfs_dir'], '/\\' ); // Remove trailing slash for the get.
+			$structure = $this->get( $this->config['structure'], $vfs_dir, [], '/' );
+			$vfs_dir  .= '/'; // Add the trailing slash for the flattening.
 		} else {
 			$vfs_dir   = '';
 			$structure = $this->config['structure'];

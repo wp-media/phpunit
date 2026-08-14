@@ -12,6 +12,10 @@
 	codebase is fully compliant.
 	-->
 	<file>src/Integration/HttpRequestTrait.php</file>
+	<file>src/VirtualFilesystemTestTrait.php</file>
+	<file>Tests/Unit/VirtualFilesystemDirect/TestCase.php</file>
+	<file>Tests/Unit/VirtualFilesystemTestTrait/getDefaultVfs.php</file>
+	<file>Tests/Fixtures/VirtualFilesystemTestTrait/getDefaultVfs.php</file>
 	<exclude-pattern>vendor/*</exclude-pattern>
 	<arg value="sp"/>
 	<arg name="colors"/>
