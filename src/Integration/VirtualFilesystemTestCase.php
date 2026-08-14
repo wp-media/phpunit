@@ -36,18 +36,4 @@ abstract class VirtualFilesystemTestCase extends TestCase {
 	 * @var int
 	 */
 	protected $permissions = 0777;
-
-	/**
-	 * Gets the default virtual directory filesystem structure.
-	 *
-	 * @return array default structure.
-	 */
-	public function getDefaultVfs() {
-		return [
-			'Tests' => [
-				'Integration' => [],
-				'Unit'        => [],
-			],
-		];
-	}
 }

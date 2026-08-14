@@ -178,13 +178,13 @@ parameters:
 			rawMessage: 'Call to function is_array() with array will always evaluate to true.'
 			identifier: function.alreadyNarrowedType
 			count: 1
-			path: src/Unit/VirtualFilesystemTestCase.php
+			path: src/ArrayTrait.php
 
 		-
 			rawMessage: 'Call to function is_null() with string will always evaluate to false.'
 			identifier: function.impossibleType
 			count: 2
-			path: src/Unit/VirtualFilesystemTestCase.php
+			path: src/ArrayTrait.php
 
 		-
 			rawMessage: Constant WPMEDIA_PHPUNIT_ROOT_DIR not found.
