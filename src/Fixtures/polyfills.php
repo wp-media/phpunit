@@ -1,32 +1,12 @@
 <?php
 
-if ( ! function_exists( 'rocket_has_constant' ) ) {
-	/**
-	 * Checks if the constant is defined.
-	 *
-	 * @param string $constant_name Name of the constant to check.
-	 *
-	 * @return bool true when constant is defined; else, false.
-	 */
-	function rocket_has_constant( $constant_name ) {
-		return defined( $constant_name );
-	}
-}
-
-if ( ! function_exists( 'rocket_get_constant' ) ) {
-	/**
-	 * Gets the constant is defined.
-	 *
-	 * @param string $constant_name Name of the constant to check.
-	 * @param mixed|null $default Optional. Default value to return if constant is not defined.
-	 *
-	 * @return bool true when constant is defined; else, false.
-	 */
-	function rocket_get_constant( $constant_name, $default = null ) {
-		if ( ! rocket_has_constant( $constant_name ) ) {
-			return $default;
-		}
-
-		return constant( $constant_name );
-	}
-}
+/**
+ * Polyfill functions required by tests.
+ *
+ * This package is plugin-agnostic and no longer ships plugin-specific polyfills (e.g. WP Rocket's
+ * `rocket_get_constant()` / `rocket_has_constant()`). If your consuming project needs to stub
+ * plugin-specific functions, provide your own fixtures file and require it from your project's
+ * `bootstrap.php`, or override `TestCaseTrait::stubPolyfills()`.
+ *
+ * @see https://github.com/wp-media/phpunit/issues/35
+ */

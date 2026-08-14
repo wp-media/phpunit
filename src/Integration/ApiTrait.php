@@ -34,6 +34,10 @@ trait ApiTrait {
 		// This file is local to the developer's machine and not stored in the repo.
 		require_once $config_file;
 
-		return rocket_get_constant( $name, '' );
+		if ( ! defined( $name ) ) {
+			return '';
+		}
+
+		return constant( $name );
 	}
 }
