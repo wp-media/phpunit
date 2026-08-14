@@ -8,10 +8,10 @@
 	(see issue #39). A job that only `uses:` a reusable workflow cannot carry
 	`continue-on-error`, so the ruleset is scoped instead of failing CI on the ~20 pre-existing
 	files that have not been touched yet. Add files here as they are brought up to standard
-	opportunistically, and widen this to the full source tree (the six root files plus
-	Integration/, Unit/, Fixtures/, Tests/) once the codebase is fully compliant.
+	opportunistically, and widen this to the full source tree (src/ plus Tests/) once the
+	codebase is fully compliant.
 	-->
-	<file>Integration/HttpRequestTrait.php</file>
+	<file>src/Integration/HttpRequestTrait.php</file>
 	<exclude-pattern>vendor/*</exclude-pattern>
 	<arg value="sp"/>
 	<arg name="colors"/>
