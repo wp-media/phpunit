@@ -13,7 +13,6 @@ parameters:
         - src/bootstrap-functions.php
         - src/Integration/
         - src/Unit/
-        - src/Fixtures/
         - Tests/
     scanFiles:
         - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
