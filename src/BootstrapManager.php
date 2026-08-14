@@ -16,7 +16,7 @@ class BootstrapManager {
 		$_SERVER['argc'] = $GLOBALS['argc'] = count( $GLOBALS['argv'] );
 
 		// Find and load PHPUnit.
-		foreach ( [ dirname( dirname( __DIR__ ) ), __DIR__ . '/vendor' ] as $root ) {
+		foreach ( [ dirname( dirname( dirname( __DIR__ ) ) ), dirname( __DIR__ ) . '/vendor' ] as $root ) {
 			if ( is_readable( "{$root}/bin/phpunit" ) ) {
 				require_once "{$root}/bin/phpunit";
 				return;
@@ -179,11 +179,11 @@ class BootstrapManager {
 	 */
 	protected static function getRootDir( $root ) {
 		if ( false === $root ) {
-			return dirname( dirname( dirname( __DIR__ ) ) );
+			return dirname( dirname( dirname( dirname( __DIR__ ) ) ) );
 		}
 
 		if ( '.' === $root['WPMEDIA_PHPUNIT_ROOT_DIR'] ) {
-			return __DIR__;
+			return dirname( __DIR__ );
 		}
 
 		return ltrim( $root['WPMEDIA_PHPUNIT_ROOT_DIR'], '/\\' );

@@ -5,15 +5,15 @@ parameters:
     level: 5
     inferPrivatePropertyTypeFromConstructor: true
     paths:
-        - ArrayTrait.php
-        - BootstrapManager.php
-        - TestCaseTrait.php
-        - VirtualFilesystemDirect.php
-        - VirtualFilesystemTestTrait.php
-        - bootstrap-functions.php
-        - Integration/
-        - Unit/
-        - Fixtures/
+        - src/ArrayTrait.php
+        - src/BootstrapManager.php
+        - src/TestCaseTrait.php
+        - src/VirtualFilesystemDirect.php
+        - src/VirtualFilesystemTestTrait.php
+        - src/bootstrap-functions.php
+        - src/Integration/
+        - src/Unit/
+        - src/Fixtures/
         - Tests/
     scanFiles:
         - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php

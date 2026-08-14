@@ -22,9 +22,10 @@
 		"yoast/wp-test-utils": "^1.0.0"
 	},
 	"autoload": {
-		"psr-4": { "WPMedia\\PHPUnit\\": "." }
+		"psr-4": { "WPMedia\\PHPUnit\\": "src/" }
 	},
 	"autoload-dev": {
+		"psr-4": { "WPMedia\\PHPUnit\\Tests\\": "Tests/" },
 		"files": [
 			"vendor/antecedent/patchwork/Patchwork.php"
 		]

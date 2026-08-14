@@ -14,9 +14,9 @@
 		 verbose="true">
 
 	<testsuites>
-		<testsuite name="unit">
-			<directory suffix=".php">../../../../Tests/Unit/</directory>
-			<exclude>../../../../Tests/Unit/bootstrap.php</exclude>
+		<testsuite name="integration">
+			<directory suffix=".php">../../../../../Tests/Integration/</directory>
+			<exclude>../../../../../Tests/Integration/bootstrap.php</exclude>
 		</testsuite>
 	</testsuites>
 	<groups>
