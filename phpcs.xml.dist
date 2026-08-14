@@ -11,11 +11,17 @@
 	opportunistically, and widen this to the full source tree (src/ plus Tests/) once the
 	codebase is fully compliant.
 	-->
+	<file>src/Integration/ApiTrait.php</file>
 	<file>src/Integration/HttpRequestTrait.php</file>
+	<file>src/TestCaseTrait.php</file>
+	<file>src/Unit/TestCase.php</file>
 	<file>src/VirtualFilesystemTestTrait.php</file>
+	<file>Tests/Fixtures/ApiTrait/getApiCredential.php</file>
+	<file>Tests/Fixtures/VirtualFilesystemTestTrait/getDefaultVfs.php</file>
+	<file>Tests/Unit/ApiTrait/ApiTraitTestDouble.php</file>
+	<file>Tests/Unit/ApiTrait/getApiCredential.php</file>
 	<file>Tests/Unit/VirtualFilesystemDirect/TestCase.php</file>
 	<file>Tests/Unit/VirtualFilesystemTestTrait/getDefaultVfs.php</file>
-	<file>Tests/Fixtures/VirtualFilesystemTestTrait/getDefaultVfs.php</file>
 	<exclude-pattern>vendor/*</exclude-pattern>
 	<arg value="sp"/>
 	<arg name="colors"/>
