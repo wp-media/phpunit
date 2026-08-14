@@ -129,23 +129,19 @@ trait VirtualFilesystemTestTrait {
 	/**
 	 * Gets the default virtual directory filesystem structure.
 	 *
+	 * This is the single source of truth for the default structure used by
+	 * {@see mergeStructure()}. Consumers that need a different default structure
+	 * should override this method rather than defining a competing default
+	 * elsewhere in the class hierarchy.
+	 *
 	 * @return array default structure.
 	 */
 	public function getDefaultVfs() {
 		return [
-			'wp-admin'      => [],
-			'wp-content'    => [
-				'mu-plugins' => [],
-				'plugins'    => [
-					'wp-rocket' => [],
-				],
-				'themes'     => [
-					'twentytwenty' => [],
-				],
-				'uploads'    => [],
+			'Tests' => [
+				'Integration' => [],
+				'Unit'        => [],
 			],
-			'wp-includes'   => [],
-			'wp-config.php' => '',
 		];
 	}
 

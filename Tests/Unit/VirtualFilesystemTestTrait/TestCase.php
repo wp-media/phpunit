@@ -34,18 +34,4 @@ abstract class TestCase extends BaseTestCase {
 	public function getPathToFixturesDir() {
 		return WPMEDIA_PHPUNIT_ROOT_DIR . '/Tests/Fixtures/';
 	}
-
-	/**
-	 * Gets the default virtual directory filesystem structure.
-	 *
-	 * @return array default structure.
-	 */
-	public function getDefaultVfs() {
-		return [
-			'Tests' => [
-				'Integration' => [],
-				'Unit'        => [],
-			],
-		];
-	}
 }
