@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WPMedia\PHPUnit;
 
 use ReflectionClass;
@@ -9,10 +11,6 @@ use ReflectionProperty;
 
 trait TestCaseTrait {
 
-	protected static function stubPolyfills() {
-		require_once __DIR__ . '/Fixtures/polyfills.php';
-	}
-
 	/**
 	 * Gets the test data, if it exists, for this test class.
 	 *
@@ -21,13 +19,13 @@ trait TestCaseTrait {
 	 *
 	 * @return array array of test data.
 	 */
-	protected function getTestData( $dir, $filename ) {
+	protected function getTestData( $dir, $filename ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- Public API method; renaming would be a breaking change for consumers.
 		if ( empty( $dir ) || empty( $filename ) ) {
 			return [];
 		}
 
-		$dir = str_replace( [ 'Integration', 'Unit' ], 'Fixtures', $dir );
-		$dir = rtrim( $dir, '\\/' );
+		$dir      = str_replace( [ 'Integration', 'Unit' ], 'Fixtures', $dir );
+		$dir      = rtrim( $dir, '\\/' );
 		$testdata = "$dir/{$filename}.php";
 
 		return is_readable( $testdata )
@@ -56,14 +54,14 @@ trait TestCaseTrait {
 	/**
 	 * Get reflective access to the private/protected property.
 	 *
-	 * @param string       $property Property name for which to gain access.
-	 * @param string|mixed $class    Class name or instance.
+	 * @param string       $property   Property name for which to gain access.
+	 * @param string|mixed $class_name Class name or instance.
 	 *
 	 * @return ReflectionProperty|string
 	 * @throws ReflectionException Throws an exception if property does not exist.
 	 */
-	protected function get_reflective_property( $property, $class ) {
-		$class    = new ReflectionClass( $class );
+	protected function get_reflective_property( $property, $class_name ) {
+		$class    = new ReflectionClass( $class_name );
 		$property = $class->getProperty( $property );
 
 		self::set_reflector_accessible( $property, true );
@@ -96,8 +94,18 @@ trait TestCaseTrait {
 		return $property;
 	}
 
-	protected function getNonPublicPropertyValue( $property, $class, $instance = null ) {
-		$property = $this->get_reflective_property( $property, $class );
+	/**
+	 * Gets the value of a private/protected property.
+	 *
+	 * @param string       $property   Property name for which to gain access.
+	 * @param string|mixed $class_name Class name or instance.
+	 * @param mixed|null   $instance   Instance of the target object, if the property is not static.
+	 *
+	 * @return mixed the property's value.
+	 * @throws ReflectionException Throws an exception if property does not exist.
+	 */
+	protected function getNonPublicPropertyValue( $property, $class_name, $instance = null ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- Public API method; renaming would be a breaking change for consumers.
+		$property = $this->get_reflective_property( $property, $class_name );
 
 		if ( is_null( $instance ) || $property->isStatic() ) {
 			return $property->getValue();

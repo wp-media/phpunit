@@ -5,7 +5,6 @@ This reusable package bootstraps our PHPUnit unit and integration tests. It incl
 - bootstrapping for both Unit and Integration tests
 - `phpunit.xml.dist` for each test suite
 - `TestCase` for each test suite
-- Common polyfill functions
 
 This means your repo only needs its tests. w00t!
 
