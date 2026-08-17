@@ -10,27 +10,16 @@ use WPMedia\PHPUnit\BootstrapManager as Subject;
  */
 class Test_IsGroup extends TestCase {
 
-	public function testShouldReturnTrueWhenGroupFlagMatchesRequestedName() {
-		$this->setArgv( [ 'x', 'integration', '--group', 'AdminOnly' ] );
+	/**
+	 * @dataProvider isGroupDataProvider
+	 */
+	public function testShouldDetectTheRequestedGroup( $argv, $group_name, $expected ) {
+		$this->setArgv( $argv );
 
-		$this->assertTrue( Subject::isGroup( 'AdminOnly' ) );
+		$this->assertSame( $expected, Subject::isGroup( $group_name ) );
 	}
 
-	public function testShouldReturnFalseWhenGroupFlagNameDiffers() {
-		$this->setArgv( [ 'x', 'integration', '--group', 'AdminOnly' ] );
-
-		$this->assertFalse( Subject::isGroup( 'Multisite' ) );
-	}
-
-	public function testShouldReturnFalseWhenNoGroupFlagPresent() {
-		$this->setArgv( [ 'x', 'integration' ] );
-
-		$this->assertFalse( Subject::isGroup( 'AdminOnly' ) );
-	}
-
-	public function testShouldReturnFalseWhenGroupFlagHasNoNameAfterIt() {
-		$this->setArgv( [ 'x', 'integration', '--group' ] );
-
-		$this->assertFalse( Subject::isGroup( 'AdminOnly' ) );
+	public function isGroupDataProvider() {
+		return $this->getTestData( __DIR__, 'isGroup' );
 	}
 }
