@@ -1,0 +1,27 @@
+includes:
+    - phar://phpstan.phar/conf/bleedingEdge.neon
+    - phpstan-baseline.neon
+parameters:
+    level: 5
+    inferPrivatePropertyTypeFromConstructor: true
+    paths:
+        - src/ArrayTrait.php
+        - src/BootstrapManager.php
+        - src/TestCaseTrait.php
+        - src/VirtualFilesystemDirect.php
+        - src/VirtualFilesystemTestTrait.php
+        - src/bootstrap-functions.php
+        - src/Integration/
+        - src/Unit/
+        - Tests/
+    scanFiles:
+        - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+        - vendor/php-stubs/wordpress-tests-stubs/wordpress-tests-stubs.php
+    ignoreErrors:
+        # The phpunit.coversMethod rule (enabled by bleedingEdge in phpstan-phpunit v2)
+        # flags pre-existing @covers annotations in the test fixtures. Suppressed here
+        # rather than baselined: the v2 baseline generator mangles @-leading messages
+        # (writes `@@covers`), so they never re-match. Cleaning up @covers usage is
+        # out of scope for this version bump.
+        -
+            identifier: phpunit.coversMethod

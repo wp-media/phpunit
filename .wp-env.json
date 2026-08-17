@@ -1,0 +1,9 @@
+{
+	"core": null,
+	"phpVersion": "8.3",
+	"port": 8890,
+	"testsPort": 8891,
+	"mappings": {
+		"wp-content/plugins/wpmedia-phpunit": "."
+	}
+}

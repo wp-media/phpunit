@@ -57,12 +57,22 @@ trait HttpRequestTrait {
 	 */
 	private $http_request_counts = [];
 
+	/**
+	 * Starts mocking outbound HTTP requests for the current test.
+	 *
+	 * @return void
+	 */
 	public function setup_http() {
 		$this->reset_http();
 
 		add_filter( 'pre_http_request', [ $this, 'http_callback' ], 10, 3 );
 	}
 
+	/**
+	 * Stops mocking outbound HTTP requests and fails the test if any request went unmocked.
+	 *
+	 * @return void
+	 */
 	public function tear_down_http() {
 		remove_filter( 'pre_http_request', [ $this, 'http_callback' ], 10 );
 
@@ -157,6 +167,11 @@ trait HttpRequestTrait {
 		return array_keys( $mock ) === range( 0, count( $mock ) - 1 );
 	}
 
+	/**
+	 * Clears the state tracked between tests.
+	 *
+	 * @return void
+	 */
 	private function reset_http() {
 		$this->blocked_http_requests = [];
 		$this->http_request_counts   = [];

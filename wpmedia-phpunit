@@ -5,7 +5,7 @@ namespace WPMedia\PHPUnit;
 
 $_SERVER['argv'][1] = strtolower( $_SERVER['argv'][1] );
 if ( ! class_exists( __NAMESPACE__ . '\BootstrapManager' ) ) {
-	require 'BootstrapManager.php';
+	require __DIR__ . '/src/BootstrapManager.php';
 }
 BootstrapManager::setupConstants( $_SERVER['argv'][1] );
 BootstrapManager::runTestSuite( $_SERVER['argv'][1] );

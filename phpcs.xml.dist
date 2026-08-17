@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="WP Media" xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+	<description>The custom ruleset for WP Media projects</description>
+	<arg name="basepath" value="."/>
+
+	<!--
+	Scope is intentionally limited to the file(s) already brought up to the WP Media standard
+	(see issue #39). A job that only `uses:` a reusable workflow cannot carry
+	`continue-on-error`, so the ruleset is scoped instead of failing CI on the ~20 pre-existing
+	files that have not been touched yet. Add files here as they are brought up to standard
+	opportunistically, and widen this to the full source tree (src/ plus Tests/) once the
+	codebase is fully compliant.
+	-->
+	<file>src/Integration/ApiTrait.php</file>
+	<file>src/Integration/HttpRequestTrait.php</file>
+	<file>src/TestCaseTrait.php</file>
+	<file>src/Unit/TestCase.php</file>
+	<file>src/VirtualFilesystemTestTrait.php</file>
+	<file>Tests/Fixtures/ApiTrait/getApiCredential.php</file>
+	<file>Tests/Fixtures/VirtualFilesystemTestTrait/getDefaultVfs.php</file>
+	<file>Tests/Unit/ApiTrait/ApiTraitTestDouble.php</file>
+	<file>Tests/Unit/ApiTrait/getApiCredential.php</file>
+	<file>Tests/Unit/VirtualFilesystemDirect/TestCase.php</file>
+	<file>Tests/Unit/VirtualFilesystemTestTrait/getDefaultVfs.php</file>
+	<exclude-pattern>vendor/*</exclude-pattern>
+	<arg value="sp"/>
+	<arg name="colors"/>
+	<arg name="parallel" value="50"/>
+	<arg name="extensions" value="php"/>
+	<rule ref="PHPCompatibility"/>
+	<config name="testVersion" value="7.4-"/>
+	<config name="minimum_supported_wp_version" value="6.6"/>
+	<rule ref="WordPress">
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag" />
+		<exclude name="Squiz.Commenting.FileComment.Missing" />
+		<exclude name="Squiz.Commenting.ClassComment.Missing" />
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax.Found" />
+	</rule>
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties><property name="prefixes" type="array"><element value="wpmedia" /></property></properties>
+	</rule>
+	<rule ref="WordPress.Files.FileName">
+		<properties><property name="strict_class_file_names" value="false" /></properties>
+	</rule>
+	<rule ref="Generic.Arrays.DisallowLongArraySyntax" />
+</ruleset>

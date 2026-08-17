@@ -1,3 +1,6 @@
 /vendor/*
+/node_modules/*
+.wp-env.override.json
 composer.lock
 .phpunit.result.cache
+phpcs-report.xml

@@ -22,15 +22,31 @@
 		"yoast/wp-test-utils": "^1.0.0"
 	},
 	"autoload": {
-		"psr-4": { "WPMedia\\PHPUnit\\": "." }
+		"psr-4": { "WPMedia\\PHPUnit\\": "src/" }
 	},
 	"autoload-dev": {
+		"psr-4": { "WPMedia\\PHPUnit\\Tests\\": "Tests/" },
 		"files": [
 			"vendor/antecedent/patchwork/Patchwork.php"
 		]
 	},
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^1",
+		"php-stubs/wordpress-tests-stubs": "^6.8",
+		"phpcompatibility/phpcompatibility-wp": "^2.0",
+		"phpstan/extension-installer": "^1.4",
+		"phpstan/phpstan": "^2.0",
+		"phpstan/phpstan-mockery": "^2.0",
+		"phpstan/phpstan-phpunit": "^2.0",
+		"szepeviktor/phpstan-wordpress": "^2.0",
+		"wp-coding-standards/wpcs": "^3"
+	},
 	"config": {
-		"sort-packages": true
+		"sort-packages": true,
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"phpstan/extension-installer": true
+		}
 	},
 	"scripts": {
 		"test-unit": "\"vendor/bin/phpunit\" --testsuite unit --colors=always --configuration Tests/Unit/phpunit.xml.dist",
@@ -40,6 +56,9 @@
 			"@test-unit",
 			"@test-integration",
 			"@test-integration-admin"
-		]
+		],
+		"phpcs": "vendor/bin/phpcs",
+		"phpcs:fix": "vendor/bin/phpcbf",
+		"phpstan": "vendor/bin/phpstan analyze --memory-limit=2G"
 	}
 }
