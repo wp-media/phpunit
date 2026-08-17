@@ -85,3 +85,11 @@ composite action. Keep the `composer` scripts (`test-unit`, `test-integration`,
 
 - `composer phpcs` / `composer phpcs:fix` — WordPress Coding Standards (`phpcs.xml.dist`).
 - `composer phpstan` — PHPStan (`phpstan.neon.dist`, baseline in `phpstan-baseline.neon`).
+
+**phpcs coverage is intentionally partial.** `phpcs.xml.dist` enumerates a specific allow-list of
+files rather than scanning the whole tree (see issue #39): only files already brought up to the WP
+Media standard are listed, so CI stays green on the ~20 pre-existing files that have not been
+migrated. Add files to that list opportunistically as they are cleaned up — do **not** widen the
+scope wholesale (that would fail CI on all the unmigrated files at once). Most test files, including
+the per-method files under `Tests/`, stay out of scope by design. PHPStan, by contrast, analyzes the
+full `src/` + `Tests/` set with a baseline, so new code must be PHPStan-clean.
