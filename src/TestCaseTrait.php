@@ -7,6 +7,7 @@ namespace WPMedia\PHPUnit;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use ReflectionObject;
 use ReflectionProperty;
 
 trait TestCaseTrait {
@@ -31,6 +32,38 @@ trait TestCaseTrait {
 		return is_readable( $testdata )
 			? require $testdata
 			: [];
+	}
+
+	/**
+	 * Structure + test data configuration, lazily loaded by {@see configTestData()}.
+	 *
+	 * @var array
+	 */
+	protected $config = [];
+
+	/**
+	 * Test Data Provider that uses the `'test_data'` key of the config file matching the test class,
+	 * lazily loading it on first use.
+	 *
+	 * @return array
+	 */
+	public function configTestData() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- Public API method; renaming would be a breaking change for consumers.
+		if ( empty( $this->config ) ) {
+			$this->loadTestDataConfig();
+		}
+
+		return $this->config['test_data'] ?? $this->config;
+	}
+
+	/**
+	 * Loads the test data config file matching the current test class name and location.
+	 *
+	 * @return void
+	 */
+	protected function loadTestDataConfig() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- Public API method; renaming would be a breaking change for consumers.
+		$file = ( new ReflectionObject( $this ) )->getFileName();
+
+		$this->config = $this->getTestData( dirname( $file ), basename( $file, '.php' ) );
 	}
 
 	/**
