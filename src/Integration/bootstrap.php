@@ -6,6 +6,13 @@ use WPMedia\PHPUnit\BootstrapManager;
 use function WPMedia\PHPUnit\init_test_suite;
 use Yoast\WPTestUtils\WPIntegration;
 
+if ( ! defined( 'WPMEDIA_PHPUNIT_ROOT_DIR' ) ) {
+	if ( ! class_exists( BootstrapManager::class ) ) {
+		require_once dirname( __DIR__ ) . '/BootstrapManager.php';
+	}
+	BootstrapManager::setupConstants( 'integration' );
+}
+
 require_once WPMEDIA_PHPUNIT_ROOT_DIR . '/vendor/yoast/wp-test-utils/src/WPIntegration/bootstrap-functions.php';
 require_once dirname( dirname( __FILE__ ) ) . '/bootstrap-functions.php';
 init_test_suite();
