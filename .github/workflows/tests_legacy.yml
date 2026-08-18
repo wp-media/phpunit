@@ -65,6 +65,9 @@ jobs:
     - name: Unit tests
       run: composer test-unit
 
+    - name: Unit tests via the wpmedia-phpunit binary (isolation smoke test)
+      run: composer test-unit-bin-smoke
+
     - name: Integration tests
       run: composer test-integration
 

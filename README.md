@@ -66,6 +66,19 @@ then hands off to PHPUnit. It accepts a few optional arguments:
 Any other arguments (e.g. `--filter`) are forwarded to PHPUnit unchanged. If your repo ships its
 own `phpunit.xml.dist` in the test directory, it is used; otherwise the bundled default applies.
 
+`@runInSeparateProcess` tests are supported through the bin: `BootstrapManager` registers this
+package's own self-executing entry points (the `wpmedia-phpunit` bin, `BootstrapManager.php`, and
+PHPUnit's own bin proxy) into PHPUnit's process-isolation exclude list, so they are not
+re-`require`d — and don't corrupt the isolated child's output — when PHPUnit re-includes the
+parent's loaded files (see issue #51). If your repo's own `phpunit.xml.dist` fully overrides
+PHPUnit's `bootstrap=` attribute (bypassing `src/Unit/bootstrap.php` /
+`src/Integration/bootstrap.php`), call `BootstrapManager::registerIsolationExcludeList()` yourself
+from your own bootstrap file to keep this working.
+
+As of this fix, `--colors` defaults to `auto` (previously `always`), so piping test output to a
+file or CI log no longer emits raw ANSI escape codes; pass `--colors=always` yourself if you need
+forced color output.
+
 ## Running This Package's Tests
 
 The default, supported way to run this package's own unit and integration tests locally is [`wp-env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/). It spins up a disposable, Dockerized WordPress + MySQL environment with Composer, PHPUnit, and WP-CLI preinstalled, and exposes the WordPress PHPUnit test suite (`WP_TESTS_DIR`) automatically — no manual database or test-suite install required.

@@ -15,11 +15,60 @@ class BootstrapManager {
 		$_SERVER['argv'] = $GLOBALS['argv'] = self::getConfigArgv( $which_testsuite );
 		$_SERVER['argc'] = $GLOBALS['argc'] = count( $GLOBALS['argv'] );
 
-		// Find and load PHPUnit.
+		$root = self::findPhpunitRoot();
+		if ( false !== $root ) {
+			require_once "{$root}/bin/phpunit";
+		}
+	}
+
+	/**
+	 * Finds the installed PHPUnit's root directory (the one containing bin/phpunit), checking the
+	 * consumer-install layout first, then this package's own vendor/ (self-test).
+	 *
+	 * @since x.x.x
+	 *
+	 * @return string|false absolute path to the PHPUnit install root, or false if not found.
+	 */
+	protected static function findPhpunitRoot() {
 		foreach ( [ dirname( dirname( dirname( __DIR__ ) ) ), dirname( __DIR__ ) . '/vendor' ] as $root ) {
 			if ( is_readable( "{$root}/bin/phpunit" ) ) {
-				require_once "{$root}/bin/phpunit";
-				return;
+				return $root;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Excludes this package's self-executing entry points — and PHPUnit's own bin-proxy chain —
+	 * from PHPUnit's process-isolation re-include mechanism.
+	 *
+	 * MUST be called from src/Unit/bootstrap.php or src/Integration/bootstrap.php (i.e. after
+	 * PHPUnit has already booted), NOT from runTestSuite(): vendor/bin/phpunit itself
+	 * unconditionally overwrites $GLOBALS['__PHPUNIT_ISOLATION_EXCLUDE_LIST'] with just the real
+	 * PHPUnit binary's path the moment it is required, so any earlier registration is wiped
+	 * before isolation ever reads it. See issue #51 for the empirical trace.
+	 *
+	 * @since x.x.x
+	 *
+	 * @return void
+	 */
+	public static function registerIsolationExcludeList() {
+		$candidates = [
+			dirname( __DIR__ ) . '/wpmedia-phpunit',
+			__FILE__,
+		];
+
+		$root = self::findPhpunitRoot();
+		if ( false !== $root ) {
+			$candidates[] = "{$root}/bin/phpunit";
+			$candidates[] = "{$root}/phpunit/phpunit/phpunit";
+		}
+
+		foreach ( $candidates as $file ) {
+			$real_path = realpath( $file );
+			if ( false !== $real_path ) {
+				$GLOBALS['__PHPUNIT_ISOLATION_EXCLUDE_LIST'][] = $real_path;
 			}
 		}
 	}
@@ -103,7 +152,7 @@ class BootstrapManager {
 				'vendor/bin/phpunit',
 				'--testsuite',
 				'unit',
-				'--colors=always',
+				'--colors=auto',
 				'--configuration',
 				self::getPhpunitXml( 'Unit' ),
 			];
@@ -112,7 +161,7 @@ class BootstrapManager {
 				'vendor/bin/phpunit',
 				'--testsuite',
 				'integration',
-				'--colors=always',
+				'--colors=auto',
 				'--configuration',
 				self::getPhpunitXml( 'Integration' ),
 			];

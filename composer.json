@@ -49,9 +49,10 @@
 		}
 	},
 	"scripts": {
-		"test-unit": "\"vendor/bin/phpunit\" --testsuite unit --colors=always --configuration Tests/Unit/phpunit.xml.dist",
-		"test-integration": "\"vendor/bin/phpunit\" --testsuite integration --colors=always --configuration Tests/Integration/phpunit.xml.dist --exclude-group AdminOnly",
-		"test-integration-admin": "\"vendor/bin/phpunit\" --testsuite integration --colors=always --configuration Tests/Integration/phpunit.xml.dist --group AdminOnly",
+		"test-unit": "\"vendor/bin/phpunit\" --testsuite unit --colors=auto --configuration Tests/Unit/phpunit.xml.dist",
+		"test-integration": "\"vendor/bin/phpunit\" --testsuite integration --colors=auto --configuration Tests/Integration/phpunit.xml.dist --exclude-group AdminOnly",
+		"test-integration-admin": "\"vendor/bin/phpunit\" --testsuite integration --colors=auto --configuration Tests/Integration/phpunit.xml.dist --group AdminOnly",
+		"test-unit-bin-smoke": "php wpmedia-phpunit unit WPMEDIA_PHPUNIT_ROOT_DIR=. --group IsolationSmoke",
 		"run-tests": [
 			"@test-unit",
 			"@test-integration",
