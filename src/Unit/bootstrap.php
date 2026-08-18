@@ -4,6 +4,13 @@ namespace WPMedia\PHPUnit\Unit;
 
 use function WPMedia\PHPUnit\init_test_suite;
 
+if ( ! defined( 'WPMEDIA_PHPUNIT_ROOT_DIR' ) ) {
+	if ( ! class_exists( \WPMedia\PHPUnit\BootstrapManager::class ) ) {
+		require_once dirname( __DIR__ ) . '/BootstrapManager.php';
+	}
+	\WPMedia\PHPUnit\BootstrapManager::setupConstants( 'unit' );
+}
+
 require_once WPMEDIA_PHPUNIT_ROOT_DIR . '/vendor/yoast/wp-test-utils/src/BrainMonkey/bootstrap.php';
 require_once dirname( dirname( __FILE__ ) ) . '/bootstrap-functions.php';
 init_test_suite();
