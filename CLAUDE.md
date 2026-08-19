@@ -18,7 +18,10 @@ lives in `src/` (PSR-4 `WPMedia\PHPUnit\`); the package's own tests live in `Tes
 - **Bootstraps** — `src/{Unit,Integration}/bootstrap.php` load the autoloader, Patchwork, and
   Brain\Monkey (unit) or Yoast WPIntegration (integration), then optionally require an add-on
   bootstrap (`WPMEDIA_PHPUNIT_ADDON_ROOT_TEST_DIR`) and the consumer's own
-  `Tests/{Unit,Integration}/bootstrap.php`.
+  `Tests/{Unit,Integration}/bootstrap.php`. Each bootstrap is **self-locating**: if
+  `WPMEDIA_PHPUNIT_ROOT_DIR` is not already defined (e.g. the file is required directly rather than
+  through the bin), it requires `BootstrapManager` and calls `setupConstants('unit'|'integration')`
+  to derive the constants itself before proceeding.
 - **Public API consumers extend** — base `Unit\TestCase` / `Integration\TestCase`, plus
   `VirtualFilesystemTestCase`, `AdminTestCase`, `AjaxTestCase`, `RESTfulTestCase`, `RESTVfsTestCase`,
   and the traits (`ArrayTrait`, `TestCaseTrait`, `VirtualFilesystemTestTrait`, `ApiTrait`,
@@ -31,7 +34,9 @@ lives in `src/` (PSR-4 `WPMedia\PHPUnit\`); the package's own tests live in `Tes
 
 One class per method: `Tests/{Unit,Integration}/<Subject>/<method>.php` holding a `Test_<Method>`
 class (a per-group abstract `TestCase.php` holds shared setup), with data providers in the mirrored
-`Tests/Fixtures/<Subject>/` directory (resolved by `TestCaseTrait::getTestData()`). Test namespace is
+`Tests/Fixtures/<Subject>/` directory (resolved by `TestCaseTrait::getTestData()`, or by
+`TestCaseTrait::configTestData()`, which self-locates the fixture matching the test class and returns
+its `'test_data'` key — the config-driven variant added in #53). Test namespace is
 PSR-4 `WPMedia\PHPUnit\Tests\`. New per-method test files follow the existing style (no per-method
 doc comments) and stay **out** of the `phpcs.xml.dist` scope, alongside the other test files.
 
