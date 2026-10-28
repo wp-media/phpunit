@@ -36,6 +36,20 @@ use WP_Error;
  * Any request to a URL without a fixture entry - or beyond the end of its list of responses - is
  * blocked and fails the test, so a test can never silently hit the network.
  *
+ * Every request the trait receives, mocked or blocked, is recorded in order and exposed through
+ * `get_http_requests()`, so a test can assert on the request itself (method, headers, body, call count):
+ *
+ *     $this->assertCount( 2, $this->get_http_requests( 'https://example.org/api' ) );
+ *     $this->assertSame( 'PURGE', $this->get_http_requests()[0]['args']['method'] );
+ *     $this->assertSame( '{"a":1}', $this->get_http_requests( 'https://example.org/api' )[0]['args']['body'] );
+ *
+ * Each entry holds the requested `url` and the parsed `args` WordPress passes to `pre_http_request`:
+ * defaults merged (`method`, `timeout`, `blocking`, `headers`, `body`, ...) and `http_request_args`
+ * filters applied, but `headers` exactly as the caller passed them. Only requests reaching the
+ * priority-10 `pre_http_request` filter are recorded, so a filter at a lower priority that
+ * short-circuits a request hides it. The log is cleared by `setup_http()` and `tear_down_http()`, so
+ * read it before tearing down.
+ *
  * The consuming test class supplies the fixture through a `$config` property: declare it on the
  * class, or inherit it from a base test case that already provides one, such as
  * VirtualFilesystemTestCase. This trait deliberately does not declare `$config` itself, as PHP
@@ -62,6 +76,13 @@ trait HttpRequestTrait {
 	 * @var int[]
 	 */
 	private $http_request_counts = [];
+
+	/**
+	 * Requests received during the test, in order.
+	 *
+	 * @var array<int, array{url: string, args: array}>
+	 */
+	private $http_request_log = [];
 
 	/**
 	 * Starts mocking outbound HTTP requests for the current test.
@@ -109,6 +130,11 @@ trait HttpRequestTrait {
 	 * @return array|WP_Error The mocked response, or a WP_Error when the request is not mocked.
 	 */
 	public function http_callback( $response, $args, $url ) {
+		$this->http_request_log[] = [
+			'url'  => $url,
+			'args' => $args,
+		];
+
 		$mocked = isset( $this->config['http'] ) && is_array( $this->config['http'] )
 			? $this->config['http']
 			: [];
@@ -136,6 +162,28 @@ trait HttpRequestTrait {
 		$this->http_request_counts[ $url ] = $index + 1;
 
 		return $mock[ $index ];
+	}
+
+	/**
+	 * Gets the requests received since `setup_http()`, in the order they were made.
+	 *
+	 * @param string|null $url Exact URL to filter on.
+	 *
+	 * @return array<int, array{url: string, args: array}> Requests, each with its `url` and parsed `args`.
+	 */
+	protected function get_http_requests( $url = null ) {
+		if ( null === $url ) {
+			return $this->http_request_log;
+		}
+
+		return array_values(
+			array_filter(
+				$this->http_request_log,
+				static function ( $request ) use ( $url ) {
+					return $request['url'] === $url;
+				}
+			)
+		);
 	}
 
 	/**
@@ -181,5 +229,6 @@ trait HttpRequestTrait {
 	private function reset_http() {
 		$this->unmocked_http_requests = [];
 		$this->http_request_counts    = [];
+		$this->http_request_log       = [];
 	}
 }
