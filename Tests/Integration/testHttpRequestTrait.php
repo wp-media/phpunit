@@ -213,6 +213,147 @@ class Test_HttpRequestTrait extends TestCase {
 		$this->assertSame( 'first', wp_remote_retrieve_body( wp_remote_get( self::MOCKED_URL ) ) );
 	}
 
+	public function testShouldLogNothingWhenNoRequestWasMade() {
+		$this->assertSame( [], $this->get_http_requests() );
+		$this->assertSame( [], $this->get_http_requests( self::MOCKED_URL ) );
+	}
+
+	public function testShouldLogRequestsInOrderWithUrlAndArgs() {
+		$this->config = [
+			'http' => [
+				self::MOCKED_URL => $this->response( 'first' ),
+				self::OTHER_URL  => $this->response( 'second' ),
+			],
+		];
+
+		wp_remote_get( self::MOCKED_URL );
+		wp_remote_get( self::OTHER_URL );
+		wp_remote_get( self::MOCKED_URL );
+
+		$requests = $this->get_http_requests();
+
+		$this->assertCount( 3, $requests );
+		$this->assertSame(
+			[ self::MOCKED_URL, self::OTHER_URL, self::MOCKED_URL ],
+			wp_list_pluck( $requests, 'url' )
+		);
+		$this->assertCount( 3, wp_list_pluck( $requests, 'args' ) );
+	}
+
+	public function testShouldLogParsedRequestArguments() {
+		$this->config = [ 'http' => [ self::MOCKED_URL => $this->response( 'ok' ) ] ];
+
+		wp_remote_request(
+			self::MOCKED_URL,
+			[
+				'method'   => 'PURGE',
+				'timeout'  => 7,
+				'blocking' => false,
+				'headers'  => [ 'X-Test' => 'yes' ],
+				'body'     => '{"a":1}',
+			]
+		);
+		wp_remote_get( self::MOCKED_URL );
+
+		$requests = $this->get_http_requests();
+
+		$this->assertSame( 'PURGE', $requests[0]['args']['method'] );
+		$this->assertSame( 7, $requests[0]['args']['timeout'] );
+		$this->assertFalse( $requests[0]['args']['blocking'] );
+		$this->assertSame( [ 'X-Test' => 'yes' ], $requests[0]['args']['headers'] );
+		$this->assertSame( '{"a":1}', $requests[0]['args']['body'] );
+
+		$this->assertSame( 'GET', $requests[1]['args']['method'] );
+		$this->assertTrue( $requests[1]['args']['blocking'] );
+		$this->assertArrayHasKey( 'timeout', $requests[1]['args'] );
+		$this->assertArrayHasKey( 'headers', $requests[1]['args'] );
+		$this->assertArrayHasKey( 'body', $requests[1]['args'] );
+	}
+
+	public function testShouldFilterLoggedRequestsByExactUrl() {
+		$this->config = [
+			'http' => [
+				self::MOCKED_URL => $this->response( 'first' ),
+				self::OTHER_URL  => $this->response( 'second' ),
+			],
+		];
+
+		wp_remote_get( self::MOCKED_URL );
+		wp_remote_get( self::OTHER_URL );
+		wp_remote_get( self::MOCKED_URL );
+		wp_remote_get( self::OTHER_URL );
+
+		$requests = $this->get_http_requests( self::OTHER_URL );
+
+		$this->assertSame( [ 0, 1 ], array_keys( $requests ) );
+		$this->assertSame( [ self::OTHER_URL, self::OTHER_URL ], wp_list_pluck( $requests, 'url' ) );
+		$this->assertSame( [], $this->get_http_requests( 'https://unknown.invalid/api' ) );
+		$this->assertSame( [], $this->get_http_requests( self::OTHER_URL . '/' ) );
+		$this->assertSame( [], $this->get_http_requests( self::OTHER_URL . '?a=1' ) );
+		$this->assertSame( [], $this->get_http_requests( strtoupper( self::OTHER_URL ) ) );
+	}
+
+	public function testShouldLogRequestsToUrlsWithResponseList() {
+		$this->config = [ 'http' => [ self::MOCKED_URL => [ $this->response( 'one' ), $this->response( 'two' ) ] ] ];
+
+		wp_remote_get( self::MOCKED_URL );
+		wp_remote_get( self::MOCKED_URL );
+		wp_remote_get( self::MOCKED_URL );
+
+		$this->assertCount( 3, $this->get_http_requests( self::MOCKED_URL ) );
+		$this->assertStringContainsString(
+			self::MOCKED_URL . ' (request #3, but the fixture only lists 2 response(s))',
+			$this->captureTearDownFailure()
+		);
+	}
+
+	public function testShouldLogBlockedRequests() {
+		$this->config = [];
+
+		$this->assertBlocked( wp_remote_get( self::UNMOCKED_URL ) );
+
+		$requests = $this->get_http_requests();
+
+		$this->assertCount( 1, $requests );
+		$this->assertSame( self::UNMOCKED_URL, $requests[0]['url'] );
+		$this->assertStringContainsString( self::UNMOCKED_URL, $this->captureTearDownFailure() );
+	}
+
+	public function testShouldClearLogOnTearDown() {
+		$this->config = [ 'http' => [ self::MOCKED_URL => $this->response( 'ok' ) ] ];
+
+		wp_remote_get( self::MOCKED_URL );
+
+		$this->assertCount( 1, $this->get_http_requests() );
+
+		$this->tear_down_http();
+
+		$this->assertSame( [], $this->get_http_requests() );
+
+		// Restore the registered filter so the real tear_down() stays consistent.
+		$this->setup_http();
+	}
+
+	public function testShouldStartWithEmptyLogOnSetup() {
+		$this->config = [ 'http' => [ self::MOCKED_URL => $this->response( 'ok' ) ] ];
+
+		wp_remote_get( self::MOCKED_URL );
+
+		$this->assertCount( 1, $this->get_http_requests() );
+
+		// Registering the same callback again replaces it, so the real tear_down() stays consistent.
+		$this->setup_http();
+
+		$this->assertSame( [], $this->get_http_requests() );
+	}
+
+	public function testShouldNotAlterMockedResponsesWhenLogging() {
+		$this->config = [ 'http' => [ self::MOCKED_URL => $this->response( 'same' ) ] ];
+
+		$this->assertSame( $this->response( 'same' ), wp_remote_get( self::MOCKED_URL ) );
+		$this->assertCount( 1, $this->get_http_requests() );
+	}
+
 	/**
 	 * Asserts the request was blocked by the trait rather than attempted.
 	 *
