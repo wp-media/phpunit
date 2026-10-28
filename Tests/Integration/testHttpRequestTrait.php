@@ -339,8 +339,9 @@ class Test_HttpRequestTrait extends TestCase {
 
 		wp_remote_get( self::MOCKED_URL );
 
-		// Simulate the next test in the class starting over.
-		$this->tear_down_http();
+		$this->assertCount( 1, $this->get_http_requests() );
+
+		// Registering the same callback again replaces it, so the real tear_down() stays consistent.
 		$this->setup_http();
 
 		$this->assertSame( [], $this->get_http_requests() );
