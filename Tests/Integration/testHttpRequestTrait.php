@@ -78,7 +78,7 @@ class Test_HttpRequestTrait extends TestCase {
 	public function testShouldReuseSingleResponseForEveryRequestToSameUrl() {
 		$this->config = [ 'http' => [ self::MOCKED_URL => $this->response( 'same' ) ] ];
 
-		foreach ( range( 1, 3 ) as $unused ) {
+		for ( $i = 1; $i <= 3; $i++ ) {
 			$this->assertSame( 'same', wp_remote_retrieve_body( wp_remote_get( self::MOCKED_URL ) ) );
 		}
 	}

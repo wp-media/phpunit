@@ -16,7 +16,7 @@ class Test_PutContents extends TestCase {
 		$this->assertSame( $content, $this->filesystem->get_contents( 'public/baz/index.html' ) );
 
 		$original = $this->filesystem->get_contents( 'Tests/Unit/SomeClass/getFile.php' );
-		$content  = 'New contents';
+		$content  = 'Updated contents';
 		$this->assertTrue( $this->filesystem->put_contents( 'Tests/Unit/SomeClass/getFile.php', $content ) );
 		$this->assertNotSame( $original, $this->filesystem->get_contents( 'Tests/Unit/SomeClass/getFile.php' ) );
 		$this->assertSame( $content, $this->filesystem->get_contents( 'Tests/Unit/SomeClass/getFile.php' ) );

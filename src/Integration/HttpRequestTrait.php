@@ -40,15 +40,21 @@ use WP_Error;
  * class, or inherit it from a base test case that already provides one, such as
  * VirtualFilesystemTestCase. This trait deliberately does not declare `$config` itself, as PHP
  * rejects composing a trait property with an inherited one whose default value differs.
+ *
+ * For the same reason, the trait's own internal state property is named `$unmocked_http_requests`
+ * rather than `$blocked_http_requests`: WordPress 7.2 added a `protected array $blocked_http_requests`
+ * to `WP_UnitTestCase_Base`, and PHP cannot compose the trait's private property against it.
  */
 trait HttpRequestTrait {
 
 	/**
 	 * Reasons why requests were blocked during the test, if any.
 	 *
+	 * Named `unmocked` (not `blocked`) to avoid composing against WP_UnitTestCase_Base::$blocked_http_requests (WP 7.2+).
+	 *
 	 * @var string[]
 	 */
-	private $blocked_http_requests = [];
+	private $unmocked_http_requests = [];
 
 	/**
 	 * Number of requests served so far, keyed by URL. Used to walk a list of responses.
@@ -76,7 +82,7 @@ trait HttpRequestTrait {
 	public function tear_down_http() {
 		remove_filter( 'pre_http_request', [ $this, 'http_callback' ], 10 );
 
-		$blocked = $this->blocked_http_requests;
+		$blocked = $this->unmocked_http_requests;
 
 		$this->reset_http();
 
@@ -141,7 +147,7 @@ trait HttpRequestTrait {
 	 * @return WP_Error
 	 */
 	private function block_http_request( $url, $reason ) {
-		$this->blocked_http_requests[] = $reason;
+		$this->unmocked_http_requests[] = $reason;
 
 		return new WP_Error(
 			'wpmedia_phpunit_unmocked_http_request',
@@ -173,7 +179,7 @@ trait HttpRequestTrait {
 	 * @return void
 	 */
 	private function reset_http() {
-		$this->blocked_http_requests = [];
-		$this->http_request_counts   = [];
+		$this->unmocked_http_requests = [];
+		$this->http_request_counts    = [];
 	}
 }

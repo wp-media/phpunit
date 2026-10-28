@@ -58,7 +58,7 @@ class BootstrapManager {
 			return false;
 		}
 
-		$group_name_index = ++$group['index'];
+		$group_name_index = $group['index'] + 1;
 
 		// Bail out if no groupName given.
 		if ( ! isset( $_SERVER['argv'][ $group_name_index ] ) ) {
